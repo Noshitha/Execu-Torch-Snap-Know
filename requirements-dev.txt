@@ -1,0 +1,23 @@
+# SnapKnow Development Requirements
+# For building AI models (face embedding, Whisper)
+
+# Core ML
+torch==2.2.2
+torchvision==0.17.2
+torchaudio==0.17.2
+numpy==1.26.4
+
+# Face Recognition
+facenet-pytorch==1.0.0
+
+# ExecuTorch (for .pte model export)
+executorch==1.3.1
+
+# Speech-to-Text (optional)
+openai-whisper==20240930
+
+# Utilities
+scipy
+scikit-learn
+Pillow
+tqdm
