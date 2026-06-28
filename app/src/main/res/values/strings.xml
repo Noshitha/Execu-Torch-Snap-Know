@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SnapKnow</string>
+    <string name="status_ready">Ready — say something</string>
+    <string name="status_listening">Listening…</string>
+    <string name="status_thinking">Processing…</string>
+    <string name="btn_mic">Speak</string>
+    <string name="btn_remember_face">Remember face</string>
+    <string name="btn_flip_camera">Flip camera</string>
+</resources>

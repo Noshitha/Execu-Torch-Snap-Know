@@ -1,0 +1,23 @@
+# Model conversion dependencies
+# Install inside a Python 3.10–3.13 venv:
+#   python -m venv .venv && source .venv/bin/activate
+#   pip install -r requirements.txt
+
+torch>=2.3.0
+torchvision>=0.18.0
+torchaudio>=2.3.0          # only needed for Whisper export
+
+# ExecuTorch Python package (install from the cloned repo, not PyPI)
+# After cloning: pip install -e /path/to/executorch
+# executorch  ← installed separately
+
+# Face model
+facenet-pytorch>=2.5.3     # pretrained InceptionResnetV1 / MobileFaceNet
+
+# Whisper (for ASR model export, optional)
+openai-whisper>=20231117
+
+# Utilities
+Pillow>=10.0.0
+numpy>=1.24.0
+onnx>=1.14.0

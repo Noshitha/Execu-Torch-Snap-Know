@@ -1,0 +1,366 @@
+[1/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/core/tag.cpp.o
+[2/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/core/exec_aten/util/tensor_shape_to_c_string.cpp.o
+[3/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/core/tensor_layout.cpp.o
+[4/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/core/exec_aten/util/tensor_util_portable.cpp.o
+[5/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/core/portable_type/tensor_impl.cpp.o
+[6/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/core/evalue.cpp.o
+[7/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/executor/method_meta.cpp.o
+[8/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_executorch_logging.dir/runtime/Logging.cpp.o
+[9/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_logger.dir/runtime/backends/QnnLogger.cpp.o
+[10/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/platform/abort.cpp.o
+[11/356] Linking CXX static library backends/qualcomm/libqnn_executorch_logging.a
+[12/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_sys_implementation.dir/runtime/backends/QnnSysImplementation.cpp.o
+[13/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/platform/platform.cpp.o
+[14/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/platform/log.cpp.o
+[15/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_op_package_manager.dir/runtime/backends/QnnOpPackageManager.cpp.o
+[16/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/platform/runtime.cpp.o
+[17/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/platform/profiler.cpp.o
+[18/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_implementation.dir/runtime/backends/QnnImplementation.cpp.o
+[19/356] Building CXX object CMakeFiles/executorch_core.dir/schema/extended_header.cpp.o
+[20/356] Linking CXX static library backends/qualcomm/libqnn_implementation.a
+[21/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/executor/program.cpp.o
+[22/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/executor/method.cpp.o
+[23/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/executor/program_validation.cpp.o
+[24/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/executor/pte_data_map.cpp.o
+[25/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/executor/tensor_parser_exec_aten.cpp.o
+[26/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/executor/tensor_parser_portable.cpp.o
+[27/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/kernel/operator_registry.cpp.o
+[28/356] Building CXX object CMakeFiles/executorch_core.dir/runtime/platform/default/posix.cpp.o
+[29/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_backend.dir/runtime/backends/QnnBackendCommon.cpp.o
+[30/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_backend.dir/runtime/backends/gpu/GpuBackendCustomConfig.cpp.o
+[31/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_backend.dir/runtime/backends/gpu/GpuBackend.cpp.o
+[32/356] Linking CXX static library backends/qualcomm/libqnn_logger.a
+[33/356] Linking CXX static library backends/qualcomm/libqnn_op_package_manager.a
+[34/356] Linking CXX static library backends/qualcomm/libqnn_sys_implementation.a
+[35/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_device.dir/runtime/backends/QnnDeviceCommon.cpp.o
+[36/356] Linking CXX static library libexecutorch_core.a
+[37/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_backend.dir/runtime/backends/lpai/LpaiBackend.cpp.o
+[38/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_device.dir/runtime/backends/htp/target/HtpDevicePlatformInfoConfig.cpp.o
+[39/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_device.dir/runtime/backends/htp/target/HtpDeviceCustomConfig.cpp.o
+[40/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_device.dir/runtime/backends/lpai/target/LpaiDevice.cpp.o
+[41/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_backend.dir/runtime/backends/lpai/LpaiBackendCustomConfig.cpp.o
+[42/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_backend_cache.dir/runtime/backends/htp/HtpBackendCache.cpp.o
+[43/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/activation_ops_util.cpp.o
+[44/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_backend_cache.dir/runtime/backends/QnnBackendCache.cpp.o
+[45/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/arange_util.cpp.o
+[46/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/delinearize_index.cpp.o
+[47/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/broadcast_util.cpp.o
+[48/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/distance_util.cpp.o
+[49/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/advanced_index_util.cpp.o
+[50/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_device.dir/runtime/backends/htp/HtpDevice.cpp.o
+[51/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/dtype_util.cpp.o
+[52/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/index_util.cpp.o
+[53/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/copy_ops_util.cpp.o
+[54/356] Linking CXX static library backends/qualcomm/libqnn_backend.a
+[55/356] Linking CXX static library backends/qualcomm/libqnn_backend_cache.a
+[56/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/kernel_ops_util.cpp.o
+[57/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/matmul_ops_util.cpp.o
+[58/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/padding_util.cpp.o
+[59/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/repeat_util.cpp.o
+[60/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/select_copy_util.cpp.o
+[61/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/normalization_ops_util.cpp.o
+[62/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/reduce_util.cpp.o
+[63/356] Linking CXX static library backends/qualcomm/libqnn_device.a
+[64/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/upsample_util.cpp.o
+[65/356] Building CXX object kernels/portable/cpu/util/CMakeFiles/kernels_util_all_deps.dir/slice_util.cpp.o
+[66/356] Linking CXX static library kernels/portable/cpu/util/libkernels_util_all_deps.a
+[67/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op__adaptive_avg_pool2d.cpp.o
+[68/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op__clone_dim_order.cpp.o
+[69/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op__conj_physical.cpp.o
+[70/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_context.dir/runtime/backends/htp/HtpContext.cpp.o
+[71/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_context.dir/runtime/backends/gpu/GpuContext.cpp.o
+[72/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_context.dir/runtime/backends/lpai/LpaiContext.cpp.o
+[73/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_context.dir/runtime/backends/gpu/target/GpuContextCustomConfig.cpp.o
+[74/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_context.dir/runtime/backends/ir/target/IrContext.cpp.o
+[75/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_context.dir/runtime/backends/lpai/target/LpaiContextCustomConfig.cpp.o
+[76/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_profiler.dir/runtime/backends/QnnProfiler.cpp.o
+[77/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op__empty_dim_order.cpp.o
+[78/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_context.dir/runtime/backends/htp/target/HtpContextCustomConfig.cpp.o
+[79/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_context.dir/runtime/backends/QnnContextCommon.cpp.o
+[80/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_alias_copy.cpp.o
+[81/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_acos.cpp.o
+[82/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_allclose.cpp.o
+[83/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_abs.cpp.o
+[84/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_acosh.cpp.o
+[85/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_arange.cpp.o
+[86/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op__to_dim_order_copy.cpp.o
+[87/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_asin.cpp.o
+[88/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_as_strided_copy.cpp.o
+[89/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_asinh.cpp.o
+[90/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_argmax.cpp.o
+[91/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_amax.cpp.o
+[92/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_amin.cpp.o
+[93/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_argmin.cpp.o
+[94/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_atan.cpp.o
+[95/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_addmm.cpp.o
+[96/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_atanh.cpp.o
+[97/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_add.cpp.o
+[98/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_bitwise_not.cpp.o
+[99/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_atan2.cpp.o
+[100/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_bmm.cpp.o
+[101/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_ceil.cpp.o
+[102/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_avg_pool2d.cpp.o
+[103/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_bitwise_and.cpp.o
+[104/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_bitwise_left_shift.cpp.o
+[105/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_cdist_forward.cpp.o
+[106/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_bitwise_xor.cpp.o
+[107/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_bitwise_or.cpp.o
+[108/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_bitwise_right_shift.cpp.o
+[109/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_clone.cpp.o
+[110/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_cat.cpp.o
+[111/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_cos.cpp.o
+[112/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_cosh.cpp.o
+[113/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_constant_pad_nd.cpp.o
+[114/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_any.cpp.o
+[115/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_detach_copy.cpp.o
+[116/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_convolution_backward.cpp.o
+[117/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_empty.cpp.o
+[118/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_embedding.cpp.o
+[119/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_cumsum.cpp.o
+[120/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_clamp.cpp.o
+[121/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_erf.cpp.o
+[122/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_diagonal_copy.cpp.o
+[123/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_exp.cpp.o
+[124/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_elu.cpp.o
+[125/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_floor.cpp.o
+[126/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_expm1.cpp.o
+[127/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_expand_copy.cpp.o
+[128/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_flip.cpp.o
+[129/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_convolution.cpp.o
+[130/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_fill.cpp.o
+[131/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_full.cpp.o
+[132/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_eq.cpp.o
+[133/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_copy.cpp.o
+[134/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_div.cpp.o
+[135/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_fmod.cpp.o
+[136/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_full_like.cpp.o
+[137/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_gelu.cpp.o
+[138/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_gather.cpp.o
+[139/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_floor_divide.cpp.o
+[140/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_index_select.cpp.o
+[141/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_isnan.cpp.o
+[142/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_isinf.cpp.o
+[143/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_index.cpp.o
+[144/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_hardtanh.cpp.o
+[145/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_index_put.cpp.o
+[146/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_lift_fresh_copy.cpp.o
+[147/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_log.cpp.o
+[148/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_log10.cpp.o
+[149/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_leaky_relu.cpp.o
+[150/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_ge.cpp.o
+[151/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_log1p.cpp.o
+[152/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_log2.cpp.o
+[153/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_gt.cpp.o
+[154/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_log_softmax.cpp.o
+[155/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_logical_and.cpp.o
+[156/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_le.cpp.o
+[157/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_logical_or.cpp.o
+[158/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_logical_xor.cpp.o
+[159/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_grid_sampler_2d.cpp.o
+[160/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_masked_scatter.cpp.o
+[161/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_logit.cpp.o
+[162/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_masked_select.cpp.o
+[163/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_max_pool2d_with_indices_backward.cpp.o
+[164/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_logical_not.cpp.o
+[165/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_mm.cpp.o
+[166/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_lt.cpp.o
+[167/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_narrow_copy.cpp.o
+[168/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_masked_fill.cpp.o
+[169/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_max.cpp.o
+[170/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_maximum.cpp.o
+[171/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_max_pool2d_with_indices.cpp.o
+[172/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_min.cpp.o
+[173/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_minimum.cpp.o
+[174/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_native_batch_norm.cpp.o
+[175/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_native_layer_norm.cpp.o
+[176/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_native_dropout.cpp.o
+[177/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_native_group_norm.cpp.o
+[178/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_nonzero.cpp.o
+[179/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_ones.cpp.o
+[180/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_mul.cpp.o
+[181/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_pixel_shuffle.cpp.o
+[182/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_neg.cpp.o
+[183/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_permute_copy.cpp.o
+[184/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_pdist_forward.cpp.o
+[185/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_pixel_unshuffle.cpp.o
+[186/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_reciprocal.cpp.o
+[187/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_pow.cpp.o
+[188/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_relu.cpp.o
+[189/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_ne.cpp.o
+[190/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_rand.cpp.o
+[191/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_repeat.cpp.o
+[192/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_randn.cpp.o
+[193/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_reflection_pad1d.cpp.o
+[194/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_repeat_interleave.cpp.o
+[195/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_glu.cpp.o
+[196/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_reflection_pad2d.cpp.o
+[197/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_roll.cpp.o
+[198/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_replication_pad1d.cpp.o
+[199/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_mean.cpp.o
+[200/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_remainder.cpp.o
+[201/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_rsqrt.cpp.o
+[202/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_round.cpp.o
+[203/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_replication_pad2d.cpp.o
+[204/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_reflection_pad3d.cpp.o
+[205/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_replication_pad3d.cpp.o
+[206/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_scalar_tensor.cpp.o
+[207/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_rsub.cpp.o
+[208/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_sign.cpp.o
+[209/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_select_copy.cpp.o
+[210/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_scatter_add.cpp.o
+[211/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_sin.cpp.o
+[212/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_sinh.cpp.o
+[213/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_sigmoid.cpp.o
+[214/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_slice_copy.cpp.o
+[215/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_scatter.cpp.o
+[216/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_select_scatter.cpp.o
+[217/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_softmax.cpp.o
+[218/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_stack.cpp.o
+[219/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_sqrt.cpp.o
+[220/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_squeeze_copy.cpp.o
+[221/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_tan.cpp.o
+[222/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_tanh.cpp.o
+[223/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_t_copy.cpp.o
+[224/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_split_copy.cpp.o
+[225/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_slice_scatter.cpp.o
+[226/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_trunc.cpp.o
+[227/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_transpose_copy.cpp.o
+[228/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_to_copy.cpp.o
+[229/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_tril.cpp.o
+[230/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_sub.cpp.o
+[231/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_unsqueeze_copy.cpp.o
+[232/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_upsample_nearest2d.cpp.o
+[233/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_view_as_real_copy.cpp.o
+[234/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_unbind_copy.cpp.o
+[235/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_split_with_sizes_copy.cpp.o
+[236/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_view_copy.cpp.o
+[237/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_upsample_bilinear2d_aa.cpp.o
+[238/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_upsample_bilinear2d.cpp.o
+[239/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_zeros.cpp.o
+[240/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_unfold_copy.cpp.o
+[241/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/pattern/unary_ufunc_realhbbf16_to_bool.cpp.o
+[242/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/pattern/unary_ufunc_realhbf16.cpp.o
+[243/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_prod.cpp.o
+[244/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/activation_ops_util.cpp.o
+[245/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_topk.cpp.o
+[246/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/pattern/unary_ufunc_realhbbf16_to_floathbf16.cpp.o
+[247/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/broadcast_util.cpp.o
+[248/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/arange_util.cpp.o
+[249/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/dtype_util.cpp.o
+[250/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_var.cpp.o
+[251/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/advanced_index_util.cpp.o
+[252/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_where.cpp.o
+[253/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/delinearize_index.cpp.o
+[254/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/distance_util.cpp.o
+[255/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/grid_sampler_2d_util.cpp.o
+[256/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/copy_ops_util.cpp.o
+[257/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/index_util.cpp.o
+[258/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/matmul_ops_util.cpp.o
+[259/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/padding_util.cpp.o
+[260/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/kernel_ops_util.cpp.o
+[261/356] Linking CXX static library backends/qualcomm/libqnn_context.a
+[262/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/normalization_ops_util.cpp.o
+[263/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/slice_util.cpp.o
+[264/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/reduce_util.cpp.o
+[265/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/repeat_util.cpp.o
+[266/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/select_copy_util.cpp.o
+[267/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/upsample_util.cpp.o
+[268/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_var_mean.cpp.o
+[269/356] Linking CXX static library backends/qualcomm/libqnn_profiler.a
+[270/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/util/stack_util.cpp.o
+[271/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_custom_protocol.dir/runtime/backends/QnnCustomProtocol.cpp.o
+[272/356] Linking CXX static library backends/qualcomm/libqnn_custom_protocol.a
+[273/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_graph.dir/runtime/backends/htp/target/HtpGraphCustomConfig.cpp.o
+[274/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_graph.dir/runtime/backends/gpu/GpuGraphCustomConfig.cpp.o
+[275/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_graph.dir/runtime/backends/gpu/GpuGraph.cpp.o
+[276/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_graph.dir/runtime/backends/htp/HtpGraphCustomConfig.cpp.o
+[277/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_graph.dir/runtime/backends/QnnGraphCommon.cpp.o
+[278/356] Generating flat_tensor_schema headers
+[279/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_graph.dir/runtime/backends/htp/HtpGraph.cpp.o
+[280/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_mem_manager.dir/runtime/backends/QnnMemManager.cpp.o
+[281/356] Linking CXX static library backends/qualcomm/libqnn_mem_manager.a
+[282/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_graph.dir/runtime/backends/lpai/LpaiGraph.cpp.o
+[283/356] Linking CXX static library backends/qualcomm/libqnn_graph.a
+[284/356] Building CXX object backends/qualcomm/CMakeFiles/wrappers.dir/aot/wrappers/TensorWrapper.cpp.o
+[285/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_backend_unified_registry.dir/runtime/backends/QnnBackendUnifiedRegistry.cpp.o
+[286/356] Building CXX object backends/qualcomm/CMakeFiles/wrappers.dir/aot/wrappers/QuantizeParamsWrapper.cpp.o
+[287/356] Building CXX object backends/qualcomm/CMakeFiles/wrappers.dir/aot/wrappers/OpWrapper.cpp.o
+[288/356] Linking CXX static library backends/qualcomm/libqnn_backend_unified_registry.a
+[289/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_backend_options.dir/runtime/QnnBackendOptions.cpp.o
+[290/356] Linking CXX static library backends/qualcomm/libwrappers.a
+[291/356] Building CXX object extension/data_loader/CMakeFiles/extension_data_loader.dir/mmap_data_loader.cpp.o
+[292/356] Building CXX object extension/flat_tensor/CMakeFiles/extension_flat_tensor.dir/serialize/flat_tensor_header.cpp.o
+[293/356] Building CXX object extension/threadpool/CMakeFiles/extension_threadpool.dir/threadpool_guard.cpp.o
+[294/356] Building CXX object extension/data_loader/CMakeFiles/extension_data_loader.dir/file_data_loader.cpp.o
+[295/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_factory.dir/runtime/backends/QnnBackendFactory.cpp.o
+[296/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_manager.dir/aot/wrappers/TensorWrapper.cpp.o
+[297/356] Linking CXX static library backends/qualcomm/libqnn_factory.a
+[298/356] Building CXX object backends/qualcomm/CMakeFiles/shared_buffer.dir/runtime/SharedBuffer.cpp.o
+[299/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_dlc_manager.dir/runtime/backends/ir/target/QnnDlcManager.cpp.o
+[300/356] Linking CXX static library backends/qualcomm/libshared_buffer.a
+[301/356] Linking CXX static library backends/qualcomm/libqnn_dlc_manager.a
+[302/356] Building CXX object extension/threadpool/CMakeFiles/extension_threadpool.dir/threadpool.cpp.o
+[303/356] Linking CXX static library backends/qualcomm/libqnn_backend_options.a
+[304/356] Building CXX object extension/threadpool/CMakeFiles/extension_threadpool.dir/thread_parallel.cpp.o
+[305/356] Building CXX object backends/xnnpack/CMakeFiles/xnnpack_backend.dir/runtime/XNNHeader.cpp.o
+[306/356] Building CXX object extension/flat_tensor/CMakeFiles/extension_flat_tensor.dir/flat_tensor_data_map.cpp.o
+[307/356] Building CXX object extension/threadpool/CMakeFiles/extension_threadpool.dir/cpuinfo_utils.cpp.o
+[308/356] Building CXX object CMakeFiles/executorch.dir/kernels/prim_ops/et_copy_index.cpp.o
+[309/356] Building CXX object extension/named_data_map/CMakeFiles/extension_named_data_map.dir/merged_data_map.cpp.o
+[310/356] Building CXX object CMakeFiles/executorch.dir/kernels/prim_ops/register_prim_ops.cpp.o
+[311/356] Building CXX object CMakeFiles/executorch.dir/kernels/prim_ops/et_view.cpp.o
+[312/356] Linking CXX static library extension/data_loader/libextension_data_loader.a
+[313/356] Building CXX object backends/xnnpack/CMakeFiles/xnnpack_backend.dir/runtime/XNNExecutor.cpp.o
+[314/356] Linking CXX static library extension/flat_tensor/libextension_flat_tensor.a
+[315/356] Linking CXX static library extension/named_data_map/libextension_named_data_map.a
+[316/356] Building CXX object backends/xnnpack/CMakeFiles/xnnpack_backend.dir/runtime/profiling/XNNProfiler.cpp.o
+[317/356] Building CXX object backends/xnnpack/CMakeFiles/xnnpack_backend.dir/runtime/XNNWorkspaceManager.cpp.o
+[318/356] Building CXX object backends/xnnpack/CMakeFiles/xnnpack_backend.dir/runtime/XnnpackBackendOptions.cpp.o
+[319/356] Building CXX object backends/xnnpack/CMakeFiles/xnnpack_backend.dir/runtime/XNNPACKBackend.cpp.o
+[320/356] Building CXX object extension/evalue_util/CMakeFiles/extension_evalue_util.dir/print_evalue.cpp.o
+[321/356] Linking CXX static library extension/threadpool/libextension_threadpool.a
+[322/356] Linking CXX static library libexecutorch.a
+[323/356] Linking CXX static library extension/evalue_util/libextension_evalue_util.a
+[324/356] Building CXX object backends/xnnpack/CMakeFiles/xnnpack_backend.dir/runtime/XNNWeightsCache.cpp.o
+[325/356] Linking C static library /root/executorch/third-party/flatcc/lib/libflatccrt.a
+[326/356] Building CXX object extension/runner_util/CMakeFiles/extension_runner_util.dir/inputs.cpp.o
+[327/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_manager.dir/runtime/QnnManager.cpp.o
+[328/356] Building CXX object extension/runner_util/CMakeFiles/extension_runner_util.dir/inputs_portable.cpp.o
+[329/356] Linking CXX static library backends/qualcomm/libqnn_manager.a
+[330/356] Linking CXX static library extension/runner_util/libextension_runner_util.a
+[331/356] Building CXX object kernels/portable/CMakeFiles/portable_kernels.dir/cpu/op_sum.cpp.o
+[332/356] Linking CXX static library kernels/portable/libportable_kernels.a
+[333/356] Generating selected_operators.yaml for portable_ops_lib
+FAILED: [code=1] kernels/portable/portable_ops_lib/selected_operators.yaml /root/executorch/build-android/kernels/portable/portable_ops_lib/selected_operators.yaml 
+cd /root/executorch && /root/snapknow-venv/bin/python3 -m codegen.tools.gen_oplist --output_path=/root/executorch/build-android/kernels/portable/portable_ops_lib/selected_operators.yaml --ops_schema_yaml_path="/root/executorch/kernels/portable/functions.yaml"
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/root/executorch/codegen/tools/gen_oplist.py", line 15, in <module>
+    import yaml
+ModuleNotFoundError: No module named 'yaml'
+[334/356] Building CXX object backends/qualcomm/CMakeFiles/qnn_executorch_backend.dir/runtime/QnnExecuTorchBackend.cpp.o
+[335/356] Building CXX object extension/tensor/CMakeFiles/extension_tensor.dir/tensor_ptr_maker.cpp.o
+[336/356] Building CXX object backends/xnnpack/CMakeFiles/xnnpack_backend.dir/runtime/XNNCompiler.cpp.o
+[337/356] Building CXX object extension/module/CMakeFiles/extension_module.dir/module.cpp.o
+[338/356] Building CXX object extension/tensor/CMakeFiles/extension_tensor.dir/tensor_ptr.cpp.o
+[339/356] Building CXX object extension/module/CMakeFiles/extension_module_static.dir/module.cpp.o
+ninja: build stopped: subcommand failed.
+[1/18] Linking CXX static library extension/tensor/libextension_tensor.a
+[2/18] Linking CXX static library extension/module/libextension_module_static.a
+[3/18] Linking CXX static library backends/xnnpack/libxnnpack_backend.a
+[4/18] Linking CXX static library extension/module/libextension_module.a
+[5/18] Linking CXX shared library backends/qualcomm/libqnn_executorch_backend.so
+[6/18] Generating selected_operators.yaml for portable_ops_lib
+[7/18] Generating code for kernel registration
+[8/18] Building CXX object CMakeFiles/executor_runner.dir/extension/data_loader/file_data_loader.cpp.o
+[9/18] Building CXX object extension/android/CMakeFiles/executorch_jni.dir/jni/log.cpp.o
+[10/18] Building CXX object extension/android/CMakeFiles/executorch_jni.dir/jni/jni_helper.cpp.o
+[11/18] Building CXX object CMakeFiles/executor_runner.dir/runtime/executor/test/test_backend_compiler_lib.cpp.o
+[12/18] Building CXX object extension/android/CMakeFiles/executorch_jni.dir/jni/jni_layer_runtime.cpp.o
+[13/18] Building CXX object CMakeFiles/executor_runner.dir/examples/portable/executor_runner/executor_runner.cpp.o
+[14/18] Building CXX object kernels/portable/CMakeFiles/portable_ops_lib.dir/portable_ops_lib/RegisterCodegenUnboxedKernelsEverything.cpp.o
+[15/18] Linking CXX static library kernels/portable/libportable_ops_lib.a
+[16/18] Linking CXX executable executor_runner
+[17/18] Building CXX object extension/android/CMakeFiles/executorch_jni.dir/jni/jni_layer.cpp.o
+[18/18] Linking CXX shared library extension/android/libexecutorch_jni.so
