@@ -48,8 +48,8 @@ class MemoryRepository(context: Context) {
     // ─── Face memories ────────────────────────────────────────────────────────
 
     /**
-     * Saves a new face with [name], [relationship], and its 128-dim [embedding].
-     * Optionally persists [faceBitmap] as JPEG in internal storage.
+     * Saves a new face sample for [name]. Repeated saves for the same person
+     * accumulate multiple samples, which are later averaged as a centroid.
      */
     suspend fun storeFace(
         name: String,
@@ -59,17 +59,21 @@ class MemoryRepository(context: Context) {
         notes: String = ""
     ): Long = withContext(Dispatchers.IO) {
         val cleanName = name.trim()
+        val normalizedEmbedding = normalizeEmbedding(embedding) ?: return@withContext -1L
         val existing = faceDao.findByName(cleanName)
         val photoPath = faceBitmap?.let { saveFacePhoto(cleanName, it) } ?: existing?.photoPath.orEmpty()
         val entity = FaceMemory(
-            id = existing?.id ?: 0,
+            id = 0,
             name = cleanName,
-            relationship = relationship.trim(),
-            embedding = embedding,
+            relationship = relationship.trim().ifBlank { existing?.relationship.orEmpty() },
+            embedding = normalizedEmbedding,
             photoPath = photoPath,
             notes = notes.ifBlank { existing?.notes.orEmpty() }
         )
-        faceDao.insert(entity).also { Log.d(TAG, "Stored face: '$cleanName' id=$it") }
+        val sampleId = faceDao.insert(entity)
+        val sampleCount = faceDao.findAllByName(cleanName).size
+        Log.d(TAG, "Stored face sample: '$cleanName' id=$sampleId total_samples=$sampleCount")
+        sampleId
     }
 
     /**
@@ -78,14 +82,15 @@ class MemoryRepository(context: Context) {
      */
     suspend fun matchFace(queryEmbedding: FloatArray): Pair<FaceMemory, Float>? =
         withContext(Dispatchers.Default) {
-            val allFaces = faceDao.getAll()
-            if (allFaces.isEmpty()) return@withContext null
+            val normalizedQuery = normalizeEmbedding(queryEmbedding) ?: return@withContext null
+            val aggregatedFaces = aggregateFaceSamples(faceDao.getAll())
+            if (aggregatedFaces.isEmpty()) return@withContext null
 
             var bestMatch: FaceMemory? = null
             var bestScore = -1f
 
-            allFaces.forEach { face ->
-                val score = cosineSimilarity(queryEmbedding, face.embedding)
+            aggregatedFaces.forEach { face ->
+                val score = cosineSimilarity(normalizedQuery, face.embedding)
                 if (score > bestScore) {
                     bestScore = score
                     bestMatch = face
@@ -96,33 +101,55 @@ class MemoryRepository(context: Context) {
             if (bestScore >= FACE_MATCH_THRESHOLD) Pair(bestMatch!!, bestScore) else null
         }
 
-    suspend fun getAllFaces(): List<FaceMemory> = faceDao.getAll()
+    suspend fun getAllFaces(): List<FaceMemory> = withContext(Dispatchers.Default) {
+        aggregateFaceSamples(faceDao.getAll())
+    }
 
     fun observeFaces(): Flow<List<FaceMemory>> = faceDao.observeAll()
 
-    suspend fun forgetFace(name: String) = faceDao.deleteByName(name)
+    suspend fun forgetFace(name: String) = withContext(Dispatchers.IO) {
+        val samples = faceDao.findAllByName(name)
+        samples.forEach { sample ->
+            if (sample.photoPath.isNotBlank()) deleteFacePhoto(sample.photoPath)
+        }
+        faceDao.deleteByName(name)
+    }
+
+    suspend fun purgeIncompatibleFaceSamples(expectedEmbeddingSize: Int): Int = withContext(Dispatchers.IO) {
+        val allSamples = faceDao.getAll()
+        val incompatible = allSamples.filter { it.embedding.size != expectedEmbeddingSize }
+        incompatible.forEach { sample ->
+            if (sample.photoPath.isNotBlank()) deleteFacePhoto(sample.photoPath)
+            faceDao.deleteById(sample.id)
+        }
+        if (incompatible.isNotEmpty()) {
+            Log.w(TAG, "Removed ${incompatible.size} incompatible face samples. Please re-enroll faces.")
+        }
+        incompatible.size
+    }
 
     suspend fun updateFaceDetails(id: Long, relationship: String, notes: String) =
         withContext(Dispatchers.IO) {
             val existing = faceDao.findById(id) ?: return@withContext
-            faceDao.insert(
-                existing.copy(
-                    relationship = relationship.trim(),
-                    notes = notes.trim(),
-                    timestamp = System.currentTimeMillis()
+            val allSamples = faceDao.findAllByName(existing.name)
+            allSamples.forEach { sample ->
+                faceDao.insert(
+                    sample.copy(
+                        relationship = relationship.trim(),
+                        notes = notes.trim(),
+                        timestamp = System.currentTimeMillis()
+                    )
                 )
-            )
+            }
         }
 
     suspend fun deleteFaceById(id: Long) = withContext(Dispatchers.IO) {
         val existing = faceDao.findById(id) ?: return@withContext
-        if (existing.photoPath.isNotBlank()) {
-            val photoFile = File(existing.photoPath)
-            if (photoFile.exists() && !photoFile.delete()) {
-                Log.w(TAG, "Failed to delete face photo at ${existing.photoPath}")
-            }
+        val allSamples = faceDao.findAllByName(existing.name)
+        allSamples.forEach { sample ->
+            if (sample.photoPath.isNotBlank()) deleteFacePhoto(sample.photoPath)
+            faceDao.deleteById(sample.id)
         }
-        faceDao.deleteById(id)
     }
 
     suspend fun faceCount(): Int = faceDao.count()
@@ -134,6 +161,52 @@ class MemoryRepository(context: Context) {
         val file = File(dir, "${name.replace(" ", "_")}_${System.currentTimeMillis()}.jpg")
         FileOutputStream(file).use { bitmap.compress(Bitmap.CompressFormat.JPEG, 90, it) }
         return file.absolutePath
+    }
+
+    private fun deleteFacePhoto(photoPath: String) {
+        val photoFile = File(photoPath)
+        if (photoFile.exists() && !photoFile.delete()) {
+            Log.w(TAG, "Failed to delete face photo at $photoPath")
+        }
+    }
+
+    private fun aggregateFaceSamples(samples: List<FaceMemory>): List<FaceMemory> {
+        if (samples.isEmpty()) return emptyList()
+
+        val grouped = samples.groupBy { it.name.trim().lowercase() }
+        return grouped.values.mapNotNull { personSamples ->
+            val compatibleSamples = personSamples.mapNotNull { sample ->
+                normalizeEmbedding(sample.embedding)?.let { normalized ->
+                    sample to normalized
+                }
+            }
+            if (compatibleSamples.isEmpty()) return@mapNotNull null
+
+            val latest = personSamples.maxByOrNull { it.timestamp } ?: return@mapNotNull null
+            val centroid = centroid(compatibleSamples.map { it.second }) ?: return@mapNotNull null
+            latest.copy(embedding = centroid)
+        }.sortedByDescending { it.timestamp }
+    }
+
+    private fun centroid(vectors: List<FloatArray>): FloatArray? {
+        if (vectors.isEmpty()) return null
+        val dim = vectors.first().size
+        if (vectors.any { it.size != dim }) return null
+        val mean = FloatArray(dim)
+        vectors.forEach { vec ->
+            for (i in vec.indices) mean[i] += vec[i]
+        }
+        for (i in mean.indices) mean[i] /= vectors.size.toFloat()
+        return normalizeEmbedding(mean)
+    }
+
+    private fun normalizeEmbedding(embedding: FloatArray): FloatArray? {
+        if (embedding.isEmpty()) return null
+        var norm = 0f
+        for (x in embedding) norm += x * x
+        val denom = sqrt(norm)
+        if (denom < 1e-8f) return null
+        return FloatArray(embedding.size) { embedding[it] / denom }
     }
 
     /**

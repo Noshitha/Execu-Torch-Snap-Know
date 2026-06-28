@@ -71,6 +71,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         updateState { copy(embeddingModelStatus = "Loading model…") }
         viewModelScope.launch {
             faceEmbeddingModel.preload()
+            if (faceEmbeddingModel.isAvailable) {
+                val removed = repo.purgeIncompatibleFaceSamples(faceEmbeddingModel.embeddingSize)
+                if (removed > 0) {
+                    updateState {
+                        copy(
+                            response = "I removed $removed old face samples from a previous model format. Please re-save those faces."
+                        )
+                    }
+                }
+            }
             val status = if (faceEmbeddingModel.isAvailable)
                 "Face recognition ON (PyTorch Mobile)"
             else
@@ -286,11 +296,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 speak("Face recognition model isn't loaded yet. I saved the name but won't be able to recognise this person automatically.")
                 return@launch
             }
-            repo.storeFace(name, relationship, embedding, bitmap, notes)
+            val storedId = repo.storeFace(name, relationship, embedding, bitmap, notes)
+            if (storedId <= 0L) {
+                speak("I couldn't save that face sample. Please try again.")
+                return@launch
+            }
             clearResolvedFaceCache()
             val savedFacesSummary = buildSavedFacesSummary(repo.getAllFaces())
             val rel = if (relationship.isNotBlank()) ", your $relationship" else ""
-            val response = "Nice to meet $name$rel! I'll remember their face."
+            val response = "Nice to meet $name$rel! Saved one face sample. For better accuracy, add 2 to 4 more samples."
             updateState { copy(response = response, savedFacesSummary = savedFacesSummary) }
             speak(response)
         }

@@ -17,8 +17,11 @@ interface FaceMemoryDao {
     @Query("SELECT * FROM face_memory ORDER BY timestamp DESC")
     fun observeAll(): Flow<List<FaceMemory>>
 
-    @Query("SELECT * FROM face_memory WHERE LOWER(name) = LOWER(:name) LIMIT 1")
+    @Query("SELECT * FROM face_memory WHERE LOWER(name) = LOWER(:name) ORDER BY timestamp DESC LIMIT 1")
     suspend fun findByName(name: String): FaceMemory?
+
+    @Query("SELECT * FROM face_memory WHERE LOWER(name) = LOWER(:name) ORDER BY timestamp DESC")
+    suspend fun findAllByName(name: String): List<FaceMemory>
 
     @Query("SELECT * FROM face_memory WHERE id = :id LIMIT 1")
     suspend fun findById(id: Long): FaceMemory?

@@ -26,10 +26,15 @@ private const val FACE_SIZE = 112
  */
 class FaceEmbeddingModel(private val context: Context) {
 
+    companion object {
+        const val EMBEDDING_SIZE = 512
+    }
+
     private var module: Module? = null
 
     /** True once [preload] has succeeded */
     val isAvailable: Boolean get() = module != null
+    val embeddingSize: Int get() = EMBEDDING_SIZE
 
     /**
      * Extracts the model asset (107 MB, first run only) and loads it via
