@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     // Prevent duplicate speech execution when unrelated UI state changes re-emit.
     private var lastHandledSpeechRequestId: Long? = null
+    private var lastHandledSceneRequestId: Long? = null
 
     // ─── Permission launcher ──────────────────────────────────────────────────
 
@@ -183,6 +184,7 @@ class MainActivity : AppCompatActivity() {
             if (!::cameraHelper.isInitialized || isCameraStarted) return@setOnClickListener
             cameraHelper.start()
             isCameraStarted = true
+            viewModel.onCameraRunningChanged(true)
             binding.startCameraButton.visibility = View.GONE
             updateCameraControls()
         }
@@ -208,6 +210,22 @@ class MainActivity : AppCompatActivity() {
 
         binding.manageSavedFacesButton.setOnClickListener {
             openFaceMemoryManager()
+        }
+
+        binding.describeSceneButton.setOnClickListener {
+            if (!isCameraStarted) {
+                tts.speak("Please start the camera first.")
+                return@setOnClickListener
+            }
+            viewModel.requestSceneDescription()
+        }
+
+        binding.askSceneButton.setOnClickListener {
+            if (!isCameraStarted) {
+                tts.speak("Please start the camera first.")
+                return@setOnClickListener
+            }
+            showSceneQuestionDialog()
         }
 
         binding.rememberFaceButton.setOnClickListener {
@@ -322,6 +340,24 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun showSceneQuestionDialog() {
+        val input = EditText(this).apply {
+            hint = "Example: Is there a cup on the table?"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Ask about the scene")
+            .setView(input)
+            .setPositiveButton("Ask") { _, _ ->
+                val question = input.text.toString().trim()
+                if (question.isNotEmpty()) {
+                    viewModel.requestSceneQuestion(question)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
     // ─── ViewModel observation ────────────────────────────────────────────────
 
     private fun observeViewModel() {
@@ -344,7 +380,7 @@ class MainActivity : AppCompatActivity() {
                         "Start the camera or ${state.speechInputState.message.lowercase()}"
                     }
                     binding.responseText.text = state.response
-                    binding.modelStatusChip.text = state.embeddingModelStatus
+                    binding.modelStatusChip.text = "${state.embeddingModelStatus}\n${state.vlmModelStatus}"
                     binding.voicePromptText.text = if (state.awaitingFaceNameForBitmap != null) {
                         "Example: This is John, my son. He helps me with groceries."
                     } else if (state.speechInputState.mode == SpeechTranscriberMode.UNAVAILABLE) {
@@ -352,7 +388,7 @@ class MainActivity : AppCompatActivity() {
                     } else if (state.speechInputState.mode == SpeechTranscriberMode.ERROR) {
                         "${state.speechInputState.engineLabel}: ${state.speechInputState.message}"
                     } else if (isCameraStarted) {
-                        "Use Remember Face for a person, or Start Mic for another request. ${state.speechInputState.engineLabel} is active."
+                        "Use Remember Face for a person, Describe Scene for VLM capture, or say 'scene question' followed by your question. ${state.speechInputState.engineLabel} is active."
                     } else {
                         "Start the camera when you want live face preview, or use Start Mic for voice-only help with ${state.speechInputState.engineLabel.lowercase()}."
                     }
@@ -375,6 +411,12 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
+
+                    val pendingScene = state.pendingSceneRequest
+                    if (pendingScene != null && pendingScene.id != lastHandledSceneRequestId) {
+                        lastHandledSceneRequestId = pendingScene.id
+                        viewModel.handleSceneSnapshot(pendingScene, captureSceneBitmap())
+                    }
                 }
             }
         }
@@ -382,11 +424,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateCameraControls() {
         binding.flipCameraButton.visibility = if (isCameraStarted) View.VISIBLE else View.GONE
+        binding.describeSceneButton.isEnabled = isCameraStarted
+        binding.askSceneButton.isEnabled = isCameraStarted
+        viewModel.onCameraRunningChanged(isCameraStarted)
         if (!isCameraStarted) {
             binding.rememberFaceButton.visibility = View.GONE
             binding.faceOverlay.updateFaces(emptyList(), lastFaceImageDims.first, lastFaceImageDims.second)
         }
     }
+
+    private fun captureSceneBitmap(): Bitmap? =
+        binding.cameraPreview.bitmap?.copy(Bitmap.Config.ARGB_8888, false)
 
     private fun updateMicControls(canStart: Boolean, canStop: Boolean) {
         binding.startMicButton.isEnabled = canStart

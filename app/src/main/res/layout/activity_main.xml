@@ -202,6 +202,39 @@
                     app:iconTint="@android:color/white" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/describe_scene_button"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:text="Describe scene"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    app:icon="@android:drawable/ic_menu_view"
+                    app:iconTint="@android:color/white" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ask_scene_button"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:text="Ask scene"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    app:icon="@android:drawable/ic_menu_search"
+                    app:iconTint="@android:color/white" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>

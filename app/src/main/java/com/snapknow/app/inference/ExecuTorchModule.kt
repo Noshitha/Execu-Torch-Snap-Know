@@ -39,8 +39,17 @@ class ExecuTorchModule private constructor(modelPath: String) : AutoCloseable {
      * @return          Flat float array of model output
      */
     fun runInference(input: FloatArray, shape: LongArray): FloatArray {
+        return runNamedInference("forward", input, shape)
+    }
+
+    fun runNamedInference(methodName: String, input: FloatArray, shape: LongArray): FloatArray {
         check(handle != 0L) { "Module already closed" }
-        return nativeRunInference(handle, input, shape)
+        return nativeRunNamedInference(handle, methodName, input, shape)
+    }
+
+    fun hasMethod(methodName: String): Boolean {
+        check(handle != 0L) { "Module already closed" }
+        return nativeHasMethod(handle, methodName)
     }
 
     override fun close() {
@@ -53,7 +62,8 @@ class ExecuTorchModule private constructor(modelPath: String) : AutoCloseable {
     // ─── Native declarations ──────────────────────────────────────────────────
 
     private external fun nativeLoadModel(path: String): Long
-    private external fun nativeRunInference(handle: Long, input: FloatArray, shape: LongArray): FloatArray
+    private external fun nativeRunNamedInference(handle: Long, methodName: String, input: FloatArray, shape: LongArray): FloatArray
+    private external fun nativeHasMethod(handle: Long, methodName: String): Boolean
     private external fun nativeDestroyModule(handle: Long)
 
     // ─── Companion ────────────────────────────────────────────────────────────
@@ -95,6 +105,7 @@ class ExecuTorchModule private constructor(modelPath: String) : AutoCloseable {
         private fun extractAsset(context: Context, name: String): File? {
             return try {
                 val dest = File(context.filesDir, name)
+                dest.parentFile?.mkdirs()
                 if (!dest.exists()) {
                     context.assets.open(name).use { src ->
                         FileOutputStream(dest).use { dst -> src.copyTo(dst) }
