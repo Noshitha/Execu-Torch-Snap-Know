@@ -11,8 +11,9 @@ enum class SpeechBackendPreference {
 }
 
 data class PiperVoiceConfig(
-    val modelAssetPath: String = "voice/en_US-lessac-medium/en_US-lessac-medium.onnx",
-    val configAssetPath: String = "voice/en_US-lessac-medium/en_US-lessac-medium.onnx.json",
+    val voiceId: String = "en_US-lessac-medium",
+    val modelAssetPath: String = "speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx",
+    val configAssetPath: String = "speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx.json",
     val speakerId: Int? = null,
     val sampleRateHz: Int = 22_050
 )

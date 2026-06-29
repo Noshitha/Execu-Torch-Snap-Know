@@ -181,13 +181,24 @@ make build-model-executorch-qnn
 ### Building Whisper Models (Experimental)
 
 ```bash
-python export_whisper_tiny.py --out_dir app/src/main/assets/
+python export_whisper_tiny.py --out_dir app/src/main/assets/speech/stt/whisper-tiny
 
 # Or with make:
 make build-model-whisper
 ```
 
 **Status:** Currently experimental. App uses Android SpeechRecognizer instead.
+
+### Staging Piper Voice Assets
+
+```bash
+bash scripts/stage_speech_assets.sh \
+    --piper-model /path/to/en_US-lessac-medium.onnx \
+    --piper-config /path/to/en_US-lessac-medium.onnx.json
+
+# Validate the packaged layout
+bash scripts/preflight_speech_assets.sh
+```
 
 ---
 

@@ -40,8 +40,8 @@ build-model-executorch-qnn:
 
 build-model-whisper:
 	@echo "Building Whisper speech models..."
-	@python export_whisper_tiny.py --out_dir app/src/main/assets/
-	@echo "✓ Models saved to app/src/main/assets/"
+	@python export_whisper_tiny.py --out_dir app/src/main/assets/speech/stt/whisper-tiny
+	@echo "✓ Whisper assets saved to app/src/main/assets/speech/stt/whisper-tiny"
 
 build-apk:
 	@echo "Building Android APK (debug)..."

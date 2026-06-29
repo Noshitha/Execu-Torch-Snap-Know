@@ -21,6 +21,7 @@ Output files
 """
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -29,7 +30,7 @@ import torch
 
 def parse_args():
     p = argparse.ArgumentParser()
-    p.add_argument("--out_dir", default="app/src/main/assets/")
+    p.add_argument("--out_dir", default="app/src/main/assets/speech/stt/whisper-tiny")
     p.add_argument("--qnn", action="store_true")
     return p.parse_args()
 
@@ -72,6 +73,18 @@ def export_whisper(args):
         print(f"      Encoder: {enc_path}  ({enc_path.stat().st_size/1024/1024:.2f} MB)")
     except Exception as e:
         print(f"      Encoder export failed: {e}")
+
+    manifest = {
+        "model": "openai/whisper-tiny",
+        "asset_dir": str(out_dir),
+        "generated_files": ["whisper_encoder.pte"],
+        "missing_files": ["whisper_decoder.pte"],
+        "notes": "Decoder export remains experimental in this environment."
+    }
+
+    manifest_path = out_dir / "whisper_manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    print(f"      Manifest: {manifest_path}")
 
     # ── Decoder ──────────────────────────────────────────────────────────────
     print("[3/5] Exporting decoder (greedy) …")

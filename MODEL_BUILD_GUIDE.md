@@ -40,7 +40,8 @@ python export_face_embedding.py \
 
 ### 3. Whisper Tiny (Speech-to-Text - Optional)
 - **Build Script**: `export_whisper_tiny.py`
-- **Outputs**: `whisper_encoder.pte`, `whisper_decoder.pte`
+- **Outputs**: `app/src/main/assets/speech/stt/whisper-tiny/whisper_encoder.pte`
+- **Expected runtime bundle**: `whisper_encoder.pte` + `whisper_decoder.pte`
 - **Status**: EXPERIMENTAL - currently using Android SpeechRecognizer instead
 - **Requires**: ExecuTorch, openai-whisper
 
@@ -50,7 +51,20 @@ pip install executorch openai-whisper
 
 # Build Whisper models
 python export_whisper_tiny.py \
-    --out_dir app/src/main/assets/
+    --out_dir app/src/main/assets/speech/stt/whisper-tiny
+```
+
+### 4. Piper Voice Assets (Text-to-Speech - Optional)
+- **Stage Script**: `scripts/stage_speech_assets.sh`
+- **Expected runtime bundle**:
+  - `app/src/main/assets/speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx`
+  - `app/src/main/assets/speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx.json`
+- **Status**: Asset/runtime bridge ready; synthesis binding still pending in Android code
+
+```bash
+bash scripts/stage_speech_assets.sh \
+    --piper-model /path/to/en_US-lessac-medium.onnx \
+    --piper-config /path/to/en_US-lessac-medium.onnx.json
 ```
 
 ## Environment Setup
@@ -123,4 +137,5 @@ Reduce batch size or run on a machine with more RAM (>8GB recommended).
 1. Build desired models using scripts above
 2. Copy `.pt` or `.pte` files to `app/src/main/assets/`
 3. Update Java inference wrappers if switching model formats
-4. Rebuild APK: `./gradlew assembleDebug`
+4. Optionally stage speech assets: `bash scripts/stage_speech_assets.sh --help`
+5. Rebuild APK: `./gradlew assembleDebug`

@@ -9,18 +9,22 @@ class PiperSpeechOutputEngine(
 
     override val backend: SpeechBackend = SpeechBackend.PIPER
     private var listener: SpeechOutputEngine.Listener? = null
+    private val assetBridge = SpeechAssetBridge(context.applicationContext)
+    private var bridgeState: SpeechRuntimeBridgeState? = null
 
     override fun initialize(listener: SpeechOutputEngine.Listener) {
         this.listener = listener
-        if (hasBundledVoiceAssets()) {
+        bridgeState = assetBridge.preparePiper(config)
+        val state = bridgeState ?: return
+        if (state.prerequisitesMet) {
             listener.onError(
                 null,
-                "Piper assets are present, but the Android runtime is not wired yet. Complete the native audio path before enabling Piper."
+                "Piper assets and native prerequisites are packaged, but this branch still needs the synthesis session binding before Piper can speak."
             )
         } else {
             listener.onError(
                 null,
-                "Piper voice package not bundled yet. Add ${config.modelAssetPath} and ${config.configAssetPath} when the runtime is ready."
+                "Piper backend unavailable. ${state.summary()}"
             )
         }
     }
@@ -36,19 +40,15 @@ class PiperSpeechOutputEngine(
 
     override fun shutdown() = Unit
 
-    override fun statusMessage(): String = if (hasBundledVoiceAssets()) {
-        "Piper assets detected, runtime hookup still TODO"
-    } else {
-        "Piper placeholder configured for en_US-lessac-medium"
-    }
-
-    private fun hasBundledVoiceAssets(): Boolean {
-        return try {
-            context.assets.open(config.modelAssetPath).close()
-            context.assets.open(config.configAssetPath).close()
-            true
-        } catch (_: Exception) {
-            false
+    override fun statusMessage(): String {
+        val state = bridgeState ?: assetBridge.preparePiper(config).also { bridgeState = it }
+        return when {
+            state.prerequisitesMet ->
+                "Piper assets prepared for ${config.voiceId}; synthesis session still needs binding"
+            state.assetBundlePresent ->
+                "Piper bundle partially prepared; ${state.summary()}"
+            else ->
+                "Piper bundle missing for ${config.voiceId}"
         }
     }
 }

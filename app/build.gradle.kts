@@ -43,6 +43,10 @@ android {
         viewBinding = true
     }
 
+    androidResources {
+        noCompress += listOf("pte", "pt", "onnx", "json", "tflite", "bin", "txt")
+    }
+
     // Pack .so files for arm64
     packaging {
         jniLibs { keepDebugSymbols += setOf("**/*.so") }

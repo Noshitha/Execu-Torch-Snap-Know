@@ -6,23 +6,26 @@ class WhisperSpeechTranscriber(
     private val context: Context
 ) : SpeechTranscriber {
 
-    override val engineLabel: String = "Whisper (placeholder)"
+    override val engineLabel: String = "Whisper tiny"
+    private val assetBridge = SpeechAssetBridge(context.applicationContext)
 
     override fun availability(): SpeechTranscriberAvailability {
-        val assetExists = runCatching {
-            context.assets.open("whisper_tiny.en.tflite").close()
-            true
-        }.getOrDefault(false)
+        val state = assetBridge.prepareWhisperTiny()
 
-        return if (assetExists) {
+        return if (state.prerequisitesMet) {
             SpeechTranscriberAvailability(
                 available = false,
-                reason = "Whisper asset is present, but the Android audio/runtime bridge is still TODO."
+                reason = "Whisper tiny assets and native prerequisites are packaged, but the streaming transcription session is not implemented in this branch yet."
+            )
+        } else if (state.assetBundlePresent) {
+            SpeechTranscriberAvailability(
+                available = false,
+                reason = "Whisper tiny bundle detected. ${state.summary()}"
             )
         } else {
             SpeechTranscriberAvailability(
                 available = false,
-                reason = "Whisper runtime placeholder only. Add model asset plus PCM inference pipeline."
+                reason = "Whisper tiny is not bundled yet. Stage whisper_encoder.pte and whisper_decoder.pte into app/src/main/assets/speech/stt/whisper-tiny/."
             )
         }
     }

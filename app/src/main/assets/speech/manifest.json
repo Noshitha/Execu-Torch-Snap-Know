@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "notes": "SnapKnow speech asset contract for staged on-device Whisper tiny and Piper bundles.",
+  "stt": {
+    "whisperTiny": {
+      "assetDir": "speech/stt/whisper-tiny",
+      "requiredFiles": [
+        "speech/stt/whisper-tiny/whisper_encoder.pte",
+        "speech/stt/whisper-tiny/whisper_decoder.pte"
+      ],
+      "nativeLibrary": "libsnapknow_whisper_runtime.so"
+    }
+  },
+  "tts": {
+    "piper": {
+      "voiceId": "en_US-lessac-medium",
+      "assetDir": "speech/tts/piper/en_US-lessac-medium",
+      "requiredFiles": [
+        "speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx",
+        "speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx.json"
+      ],
+      "nativeLibrary": "libsnapknow_piper_runtime.so",
+      "sampleRateHz": 22050
+    }
+  }
+}
