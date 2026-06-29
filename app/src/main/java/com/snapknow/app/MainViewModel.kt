@@ -66,7 +66,11 @@ data class UiState(
     /** UI-facing summary of saved faces for a lightweight "show faces" action. */
     val savedFacesSummary: String = "",
     /** Human-readable status for the ExecuTorch model */
-    val embeddingModelStatus: String = "Loading…"
+    val embeddingModelStatus: String = "Loading…",
+    /** Human-readable status for the TFLite detector path */
+    val objectDetectorStatus: String = "Object detector loading…",
+    /** Most recent object detector summary shown in the bottom card */
+    val objectDetectionSummary: String = "Object highlights will appear here when the camera is on."
 )
 
 data class PendingSpeech(
@@ -193,6 +197,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return faces.map { (trackingId, _) ->
             Pair(trackingId, trackingId?.let(faceLabelsByTrackingId::get) ?: "Unknown")
         }
+    }
+
+    fun onObjectDetectionsUpdated(summary: String) {
+        updateState { copy(objectDetectionSummary = summary) }
+    }
+
+    fun onObjectDetectorStatusChanged(status: String) {
+        updateState { copy(objectDetectorStatus = status) }
     }
 
     /**

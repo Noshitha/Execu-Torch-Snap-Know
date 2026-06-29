@@ -3,6 +3,7 @@ package com.snapknow.app.camera
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.Rect
+import android.graphics.RectF
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -10,6 +11,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
+import com.snapknow.app.inference.TfliteObjectDetector
 
 private const val TAG = "FaceAnalyzer"
 
@@ -23,8 +25,10 @@ private const val TAG = "FaceAnalyzer"
  * caller can scale them to screen coordinates in [FaceOverlayView].
  */
 class FaceAnalyzer(
+    private val objectDetector: TfliteObjectDetector? = null,
     private val onFacesDetected: (
         faces: List<DetectedFace>,
+        objects: List<DetectedObject>,
         imageWidth: Int,
         imageHeight: Int
     ) -> Unit
@@ -34,6 +38,12 @@ class FaceAnalyzer(
         val bounds: Rect,       // In image coordinate space
         val trackingId: Int?,
         val bitmap: Bitmap      // Cropped face region at original scale
+    )
+
+    data class DetectedObject(
+        val bounds: RectF,
+        val label: String,
+        val score: Float
     )
 
     private val detector = FaceDetection.getClient(
@@ -60,9 +70,19 @@ class FaceAnalyzer(
 
         detector.process(inputImage)
             .addOnSuccessListener { faces ->
+                val fullBitmap = imageProxy.toBitmap(rotation)
+                val objects = objectDetector
+                    ?.detect(fullBitmap)
+                    ?.map { detection ->
+                        DetectedObject(
+                            bounds = RectF(detection.boundingBox),
+                            label = detection.label,
+                            score = detection.score
+                        )
+                    }
+                    .orEmpty()
+
                 if (faces.isNotEmpty()) {
-                    // Convert ImageProxy to a Bitmap for face cropping
-                    val fullBitmap = imageProxy.toBitmap(rotation)
                     val detected = faces.mapNotNull { face ->
                         cropFace(fullBitmap, face, imgWidth, imgHeight)?.let { crop ->
                             DetectedFace(
@@ -72,14 +92,14 @@ class FaceAnalyzer(
                             )
                         }
                     }
-                    onFacesDetected(detected, imgWidth, imgHeight)
+                    onFacesDetected(detected, objects, imgWidth, imgHeight)
                 } else {
-                    onFacesDetected(emptyList(), imgWidth, imgHeight)
+                    onFacesDetected(emptyList(), objects, imgWidth, imgHeight)
                 }
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Face detection failed", e)
-                onFacesDetected(emptyList(), imgWidth, imgHeight)
+                onFacesDetected(emptyList(), emptyList(), imgWidth, imgHeight)
             }
             .addOnCompleteListener { imageProxy.close() }
     }
