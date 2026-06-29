@@ -1,0 +1,1 @@
+../../../app/src/main/assets/speech/tts/piper/en_US-lessac-medium/README.txt

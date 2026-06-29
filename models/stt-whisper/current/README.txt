@@ -1,0 +1,1 @@
+../../../app/src/main/assets/speech/stt/whisper-tiny/README.txt

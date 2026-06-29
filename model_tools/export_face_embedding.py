@@ -2,7 +2,7 @@
 """
 export_face_embedding.py
 ========================
-Exports MobileFaceNet (from facenet-pytorch) to ExecuTorch .pte format,
+Exports a face embedding backbone to ExecuTorch .pte format,
 ready to be placed in app/src/main/assets/face_embedding.pte.
 
 The model will run on the Qualcomm Hexagon NPU via the QNN backend delegate.
@@ -40,16 +40,17 @@ def parse_args():
                    help="Apply Qualcomm QNN backend delegate (requires QNN SDK)")
     p.add_argument("--verify", action="store_true",
                    help="Run a quick inference sanity check after export")
-    p.add_argument("--model",  choices=["mobilefacenet", "inception_resnet_v1"],
-                   default="mobilefacenet",
-                   help="Backbone to use (mobilefacenet is smaller and faster on NPU)")
+    p.add_argument("--model",  choices=["inception_resnet_v1"],
+                   default="inception_resnet_v1",
+                   help="Backbone to use. InceptionResnetV1 is the only supported export in this repo today.")
     return p.parse_args()
 
 
-# ── MobileFaceNet model ───────────────────────────────────────────────────────
-# We use facenet-pytorch's pretrained MobileNet-based model, which has been
-# trained on VGGFace2 and produces 512-dim embeddings. We optionally reduce
-# to 128-dim via a linear head for smaller storage.
+# ── Face embedding model ──────────────────────────────────────────────────────
+# We currently export InceptionResnetV1 from facenet-pytorch. The repo used to
+# claim a MobileFaceNet path here, but that implementation was not actually
+# present. This exporter is now explicit so the generated artifact matches the
+# documented model family.
 
 class FaceEmbeddingWrapper(nn.Module):
     """Wraps facenet-pytorch model: strips grad, adds L2 normalise."""
@@ -61,17 +62,14 @@ class FaceEmbeddingWrapper(nn.Module):
         except ImportError:
             sys.exit("Install facenet-pytorch:  pip install facenet-pytorch")
 
-        if backbone == "inception_resnet_v1":
-            self.backbone = InceptionResnetV1(pretrained="vggface2").eval()
-            embed_dim = 512
-        else:
-            # MobileFaceNet is ~1 MB vs ~89 MB for InceptionResnetV1 — use it!
-            # facenet-pytorch ships it as pretrained='vggface2' with classify=False
-            self.backbone = InceptionResnetV1(
-                pretrained="vggface2",
-                classify=False
-            ).eval()
-            embed_dim = 512
+        if backbone != "inception_resnet_v1":
+            sys.exit(f"Unsupported backbone: {backbone}")
+
+        self.backbone = InceptionResnetV1(
+            pretrained="vggface2",
+            classify=False
+        ).eval()
+        embed_dim = 512
 
         # Reduce to 128-dim for faster DB lookup + smaller storage
         self.proj = nn.Linear(embed_dim, 128, bias=False)

@@ -1,0 +1,206 @@
+{
+  "generatedAt": "2026-06-29T22:08:13.916622+00:00",
+  "summary": {
+    "totalArtifacts": 9,
+    "presentArtifacts": 3,
+    "missingRequiredArtifacts": 1,
+    "modelsCovered": 5
+  },
+  "models": [
+    {
+      "id": "face_embedding",
+      "displayName": "Face Embedding",
+      "purpose": "Face recognition embeddings",
+      "status": "active",
+      "artifacts": [
+        {
+          "artifactId": "face_embedding_pt",
+          "path": "app/src/main/assets/face_embedding.pt",
+          "exists": true,
+          "sizeBytes": 91252437,
+          "format": "torchscript",
+          "runtime": "PyTorch Mobile",
+          "backend": "cpu",
+          "platforms": [
+            "android"
+          ],
+          "required": false,
+          "notes": "Existing Android fallback artifact.",
+          "warnings": [
+            "TorchScript fallback is large; prefer the portable .pte artifact for final deployment."
+          ]
+        },
+        {
+          "artifactId": "face_embedding_xnnpack_pte",
+          "path": "artifacts/android/face_embedding_xnnpack.pte",
+          "exists": false,
+          "sizeBytes": null,
+          "format": "pte",
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "required": true,
+          "notes": "Primary portable artifact for generic Android and macOS.",
+          "warnings": [
+            "ExecuTorch artifact missing; export step has not completed.",
+            "Required artifact missing."
+          ]
+        },
+        {
+          "artifactId": "face_embedding_qnn_pte",
+          "path": "artifacts/android/face_embedding_qnn.pte",
+          "exists": false,
+          "sizeBytes": null,
+          "format": "pte",
+          "runtime": "ExecuTorch",
+          "backend": "qnn",
+          "platforms": [
+            "android"
+          ],
+          "required": false,
+          "notes": "Optional Snapdragon-specific optimized artifact.",
+          "warnings": [
+            "ExecuTorch artifact missing; export step has not completed."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "object_detection",
+      "displayName": "Object Detection",
+      "purpose": "Detect objects in camera frames",
+      "status": "active",
+      "artifacts": [
+        {
+          "artifactId": "fssd_25_8bit_v2",
+          "path": "app/src/main/assets/fssd_25_8bit_v2.tflite",
+          "exists": true,
+          "sizeBytes": 232096,
+          "format": "tflite",
+          "runtime": "TensorFlow Lite",
+          "backend": "cpu",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "required": true,
+          "notes": "Current validated detector asset.",
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "speech_to_text",
+      "displayName": "Speech to Text",
+      "purpose": "Offline transcription",
+      "status": "experimental",
+      "artifacts": [
+        {
+          "artifactId": "whisper_encoder_pte",
+          "path": "artifacts/shared/whisper/whisper_encoder.pte",
+          "exists": false,
+          "sizeBytes": null,
+          "format": "pte",
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "required": false,
+          "notes": "Encoder export target.",
+          "warnings": [
+            "ExecuTorch artifact missing; export step has not completed."
+          ]
+        },
+        {
+          "artifactId": "whisper_decoder_pte",
+          "path": "artifacts/shared/whisper/whisper_decoder.pte",
+          "exists": false,
+          "sizeBytes": null,
+          "format": "pte",
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "required": false,
+          "notes": "Decoder export target; currently experimental.",
+          "warnings": [
+            "ExecuTorch artifact missing; export step has not completed."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "text_to_speech",
+      "displayName": "Text to Speech",
+      "purpose": "Offline speech synthesis",
+      "status": "experimental",
+      "artifacts": [
+        {
+          "artifactId": "piper_onnx_model",
+          "path": "artifacts/shared/piper/en_US-lessac-medium.onnx",
+          "exists": false,
+          "sizeBytes": null,
+          "format": "onnx",
+          "runtime": "Piper",
+          "backend": "onnx",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "required": false,
+          "notes": "Use Piper runtime; this should not be converted to .pte.",
+          "warnings": [
+            "Piper model missing; stage the voice asset bundle before runtime integration."
+          ]
+        },
+        {
+          "artifactId": "piper_onnx_config",
+          "path": "artifacts/shared/piper/en_US-lessac-medium.onnx.json",
+          "exists": false,
+          "sizeBytes": null,
+          "format": "json",
+          "runtime": "Piper",
+          "backend": "onnx",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "required": false,
+          "notes": "Companion voice config for Piper.",
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "vision_language_model",
+      "displayName": "Vision Language Model",
+      "purpose": "Scene understanding and question answering",
+      "status": "staged",
+      "artifacts": [
+        {
+          "artifactId": "smolvlm_manifest",
+          "path": "app/src/main/assets/vlm/smolvlm_manifest.json",
+          "exists": true,
+          "sizeBytes": 1259,
+          "format": "json",
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "required": false,
+          "notes": "Manifest exists, but full decoder/tokenizer artifacts are not yet bundled.",
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

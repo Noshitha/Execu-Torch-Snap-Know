@@ -1,15 +1,18 @@
-.PHONY: help setup build-model build-model-executorch build-model-whisper build-apk install-apk clean
+.PHONY: help setup bootstrap-model-env build-model build-model-executorch build-model-whisper build-model-set validate-models build-apk install-apk clean
 
 help:
 	@echo "SnapKnow Development Commands"
 	@echo ""
 	@echo "Setup & Installation:"
 	@echo "  make setup              - Initialize Python environment"
+	@echo "  make bootstrap-model-env - Create a Python 3.11 model-build environment"
 	@echo ""
 	@echo "Model Building:"
 	@echo "  make build-model        - Build PyTorch Mobile face embedding (recommended)"
 	@echo "  make build-model-executorch - Build ExecuTorch face embedding (NPU optimized)"
 	@echo "  make build-model-whisper    - Build Whisper speech models (experimental)"
+	@echo "  make build-model-set    - Create standardized artifact folders"
+	@echo "  make validate-models    - Generate artifact validation reports"
 	@echo ""
 	@echo "Android Build & Deploy:"
 	@echo "  make build-apk          - Build Android APK (debug)"
@@ -22,6 +25,9 @@ help:
 
 setup:
 	@bash setup.sh
+
+bootstrap-model-env:
+	@bash scripts/bootstrap_model_env.sh
 
 build-model:
 	@echo "Building PyTorch Mobile face embedding model..."
@@ -42,6 +48,12 @@ build-model-whisper:
 	@echo "Building Whisper speech models..."
 	@python export_whisper_tiny.py --out_dir app/src/main/assets/speech/stt/whisper-tiny
 	@echo "✓ Whisper assets saved to app/src/main/assets/speech/stt/whisper-tiny"
+
+build-model-set:
+	@bash scripts/build_model_set.sh
+
+validate-models:
+	@python3 scripts/validate_model_artifacts.py
 
 build-apk:
 	@echo "Building Android APK (debug)..."

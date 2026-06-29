@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "modelFamilies": [
+    {
+      "id": "object-detection",
+      "displayName": "Object Detection",
+      "status": "present",
+      "recommendedModel": "FSSD 25 8-bit",
+      "currentArtifacts": [
+        {
+          "format": "tflite",
+          "path": "models/object-detection/current/fssd_25_8bit_v2.tflite"
+        }
+      ],
+      "nextStep": "Validate accuracy and latency on device; optionally re-export to ExecuTorch later."
+    },
+    {
+      "id": "face-embedding",
+      "displayName": "Face Embedding",
+      "status": "partial",
+      "recommendedModel": "InceptionResnetV1 embedding path today; portable ExecuTorch export still needed",
+      "currentArtifacts": [
+        {
+          "format": "pt",
+          "path": "models/face-embedding/current/face_embedding.pt"
+        }
+      ],
+      "expectedArtifacts": [
+        "face_embedding_xnnpack.pte",
+        "face_embedding_qnn.pte"
+      ],
+      "nextStep": "Export a portable .pte for Android and macOS."
+    },
+    {
+      "id": "stt-whisper",
+      "displayName": "STT (Whisper)",
+      "status": "placeholder",
+      "recommendedModel": "Whisper tiny",
+      "currentArtifacts": [
+        {
+          "format": "placeholder",
+          "path": "models/stt-whisper/current/README.txt"
+        }
+      ],
+      "expectedArtifacts": [
+        "whisper_encoder.pte",
+        "whisper_decoder.pte"
+      ],
+      "nextStep": "Export encoder/decoder artifacts and build runtime audio pipeline."
+    },
+    {
+      "id": "tts-piper",
+      "displayName": "TTS (Piper)",
+      "status": "placeholder",
+      "recommendedModel": "Piper en_US-lessac-medium",
+      "currentArtifacts": [
+        {
+          "format": "placeholder",
+          "path": "models/tts-piper/current/README.txt"
+        }
+      ],
+      "expectedArtifacts": [
+        "en_US-lessac-medium.onnx",
+        "en_US-lessac-medium.onnx.json"
+      ],
+      "nextStep": "Stage Piper ONNX voice assets and integrate runtime."
+    },
+    {
+      "id": "vlm",
+      "displayName": "Vision Language Model",
+      "status": "manifest-only",
+      "recommendedModel": "SmolVLM staged path",
+      "currentArtifacts": [
+        {
+          "format": "json",
+          "path": "models/vlm/current/smolvlm_manifest.json"
+        }
+      ],
+      "expectedArtifacts": [
+        "vision_encoder.pte",
+        "projector.pte",
+        "text_decoder.pte",
+        "tokenizer.json"
+      ],
+      "nextStep": "Bundle the full VLM artifact set and wire generation."
+    },
+    {
+      "id": "llm-chat",
+      "displayName": "LLM Chat",
+      "status": "placeholder",
+      "recommendedModel": "Choose after artifact pipeline is stable; small on-device instruction model",
+      "currentArtifacts": [],
+      "expectedArtifacts": [
+        "tokenizer files",
+        "chat model weights",
+        "runtime export or portable format"
+      ],
+      "nextStep": "Select a small chat model after face/object/STT/TTS artifacts are stabilized."
+    }
+  ]
+}

@@ -2,9 +2,41 @@
 
 This guide explains how to build all the models for the SnapKnow app.
 
+## Recommended Workflow
+
+The project now treats model work as a separate off-device phase before Android
+or macOS integration.
+
+1. Bootstrap a dedicated model environment:
+```bash
+make bootstrap-model-env
+source .venv-models/bin/activate
+```
+
+2. Create the standardized artifact folders:
+```bash
+make build-model-set
+```
+
+3. Export or stage artifacts into the paths declared in:
+```text
+artifacts/model_set.json
+```
+
+4. Validate the model set and generate reports:
+```bash
+make validate-models
+```
+
+5. Review:
+```text
+artifacts/reports/model_validation_report.json
+artifacts/reports/model_validation_report.html
+```
+
 ## Models Overview
 
-### 1. Face Embedding (Primary - Already in Repo)
+### 1. Face Embedding (Primary)
 - **File**: `app/src/main/assets/face_embedding.pt`
 - **Size**: 87 MB
 - **Type**: PyTorch Mobile (TorchScript)
@@ -16,50 +48,50 @@ This guide explains how to build all the models for the SnapKnow app.
 python rebuild_face_embedding_pt.py
 ```
 
-### 2. ExecuTorch Face Embedding (Alternative - Optimized for NPU)
+### 2. ExecuTorch Face Embedding (Portable + Android Optimized)
 - **Build Script**: `export_face_embedding.py`
-- **Output**: `face_embedding.pte`
+- **Outputs**:
+  - `artifacts/android/face_embedding_xnnpack.pte`
+  - `artifacts/android/face_embedding_qnn.pte`
 - **Requires**: ExecuTorch, facenet-pytorch, torch.export
 - **Optional backends**: QNN (Qualcomm), XNNPACK
+- **Important**: This exporter currently supports `InceptionResnetV1` only.
 
 ```bash
-# Install dependencies
-pip install executorch facenet-pytorch
-
 # Build for CPU (XNNPACK)
 python export_face_embedding.py \
-    --output app/src/main/assets/face_embedding.pte \
+    --output artifacts/android/face_embedding_xnnpack.pte \
     --verify
 
 # Build for QNN (Qualcomm Hexagon NPU) - requires QNN SDK
 python export_face_embedding.py \
-    --output app/src/main/assets/face_embedding_qnn.pte \
+    --output artifacts/android/face_embedding_qnn.pte \
     --qnn \
     --verify
 ```
 
-### 3. Whisper Tiny (Speech-to-Text - Optional)
+### 3. Whisper Tiny (Speech-to-Text - Experimental)
 - **Build Script**: `export_whisper_tiny.py`
-- **Outputs**: `app/src/main/assets/speech/stt/whisper-tiny/whisper_encoder.pte`
-- **Expected runtime bundle**: `whisper_encoder.pte` + `whisper_decoder.pte`
+- **Outputs**: `artifacts/shared/whisper/whisper_encoder.pte`
+- **Expected runtime bundle**:
+  - `artifacts/shared/whisper/whisper_encoder.pte`
+  - `artifacts/shared/whisper/whisper_decoder.pte`
 - **Status**: EXPERIMENTAL - currently using Android SpeechRecognizer instead
 - **Requires**: ExecuTorch, openai-whisper
 
 ```bash
-# Install dependencies
-pip install executorch openai-whisper
-
 # Build Whisper models
 python export_whisper_tiny.py \
-    --out_dir app/src/main/assets/speech/stt/whisper-tiny
+    --out_dir artifacts/shared/whisper
 ```
 
 ### 4. Piper Voice Assets (Text-to-Speech - Optional)
 - **Stage Script**: `scripts/stage_speech_assets.sh`
 - **Expected runtime bundle**:
-  - `app/src/main/assets/speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx`
-  - `app/src/main/assets/speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx.json`
+  - `artifacts/shared/piper/en_US-lessac-medium.onnx`
+  - `artifacts/shared/piper/en_US-lessac-medium.onnx.json`
 - **Status**: Asset/runtime bridge ready; synthesis binding still pending in Android code
+- **Important**: Piper should stay ONNX-based; it is not a `.pte` target.
 
 ```bash
 bash scripts/stage_speech_assets.sh \
@@ -97,10 +129,11 @@ pip install executorch
 
 | Scenario | Model | Format |
 |----------|-------|--------|
-| **Quick development** | face_embedding.pt | PyTorch Mobile |
-| **Qualcomm device (NPU)** | face_embedding_qnn.pte | ExecuTorch QNN |
-| **Generic Android (CPU)** | face_embedding.pte | ExecuTorch XNNPACK |
-| **On-device speech** | whisper_*.pte | ExecuTorch (experimental) |
+| **Quick Android fallback** | face_embedding.pt | PyTorch Mobile |
+| **Generic Android + macOS** | face_embedding_xnnpack.pte | ExecuTorch XNNPACK |
+| **Qualcomm Android** | face_embedding_qnn.pte | ExecuTorch QNN |
+| **On-device STT** | whisper_*.pte | ExecuTorch (experimental) |
+| **On-device TTS** | Piper ONNX bundle | Piper runtime |
 
 ## Current App Configuration
 
@@ -134,8 +167,7 @@ Reduce batch size or run on a machine with more RAM (>8GB recommended).
 
 ## Next Steps
 
-1. Build desired models using scripts above
-2. Copy `.pt` or `.pte` files to `app/src/main/assets/`
-3. Update Java inference wrappers if switching model formats
-4. Optionally stage speech assets: `bash scripts/stage_speech_assets.sh --help`
-5. Rebuild APK: `./gradlew assembleDebug`
+1. Build or stage desired artifacts into `artifacts/`
+2. Run `make validate-models`
+3. Fix any missing required artifacts from `artifacts/reports/model_validation_report.json`
+4. Only then wire the Android or macOS runtime to those validated artifacts

@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "generatedAt": null,
+  "targets": [
+    "android",
+    "macos"
+  ],
+  "models": [
+    {
+      "id": "face_embedding",
+      "displayName": "Face Embedding",
+      "purpose": "Face recognition embeddings",
+      "status": "active",
+      "artifacts": [
+        {
+          "id": "face_embedding_pt",
+          "format": "torchscript",
+          "path": "app/src/main/assets/face_embedding.pt",
+          "platforms": [
+            "android"
+          ],
+          "runtime": "PyTorch Mobile",
+          "backend": "cpu",
+          "required": false,
+          "notes": "Existing Android fallback artifact."
+        },
+        {
+          "id": "face_embedding_xnnpack_pte",
+          "format": "pte",
+          "path": "artifacts/android/face_embedding_xnnpack.pte",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "required": true,
+          "notes": "Primary portable artifact for generic Android and macOS."
+        },
+        {
+          "id": "face_embedding_qnn_pte",
+          "format": "pte",
+          "path": "artifacts/android/face_embedding_qnn.pte",
+          "platforms": [
+            "android"
+          ],
+          "runtime": "ExecuTorch",
+          "backend": "qnn",
+          "required": false,
+          "notes": "Optional Snapdragon-specific optimized artifact."
+        }
+      ]
+    },
+    {
+      "id": "object_detection",
+      "displayName": "Object Detection",
+      "purpose": "Detect objects in camera frames",
+      "status": "active",
+      "artifacts": [
+        {
+          "id": "fssd_25_8bit_v2",
+          "format": "tflite",
+          "path": "app/src/main/assets/fssd_25_8bit_v2.tflite",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "runtime": "TensorFlow Lite",
+          "backend": "cpu",
+          "required": true,
+          "notes": "Current validated detector asset."
+        }
+      ]
+    },
+    {
+      "id": "speech_to_text",
+      "displayName": "Speech to Text",
+      "purpose": "Offline transcription",
+      "status": "experimental",
+      "artifacts": [
+        {
+          "id": "whisper_encoder_pte",
+          "format": "pte",
+          "path": "artifacts/shared/whisper/whisper_encoder.pte",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "required": false,
+          "notes": "Encoder export target."
+        },
+        {
+          "id": "whisper_decoder_pte",
+          "format": "pte",
+          "path": "artifacts/shared/whisper/whisper_decoder.pte",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "required": false,
+          "notes": "Decoder export target; currently experimental."
+        }
+      ]
+    },
+    {
+      "id": "text_to_speech",
+      "displayName": "Text to Speech",
+      "purpose": "Offline speech synthesis",
+      "status": "experimental",
+      "artifacts": [
+        {
+          "id": "piper_onnx_model",
+          "format": "onnx",
+          "path": "artifacts/shared/piper/en_US-lessac-medium.onnx",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "runtime": "Piper",
+          "backend": "onnx",
+          "required": false,
+          "notes": "Use Piper runtime; this should not be converted to .pte."
+        },
+        {
+          "id": "piper_onnx_config",
+          "format": "json",
+          "path": "artifacts/shared/piper/en_US-lessac-medium.onnx.json",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "runtime": "Piper",
+          "backend": "onnx",
+          "required": false,
+          "notes": "Companion voice config for Piper."
+        }
+      ]
+    },
+    {
+      "id": "vision_language_model",
+      "displayName": "Vision Language Model",
+      "purpose": "Scene understanding and question answering",
+      "status": "staged",
+      "artifacts": [
+        {
+          "id": "smolvlm_manifest",
+          "format": "json",
+          "path": "app/src/main/assets/vlm/smolvlm_manifest.json",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "required": false,
+          "notes": "Manifest exists, but full decoder/tokenizer artifacts are not yet bundled."
+        }
+      ]
+    }
+  ]
+}

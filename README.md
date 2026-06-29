@@ -5,6 +5,27 @@ powered by ExecuTorch and the Qualcomm Hexagon NPU.
 
 **Zero internet. Zero cloud. Zero privacy compromise.**
 
+## Model-First Workflow
+
+Before doing any Android or macOS deployment work, finish the off-device model
+artifact phase:
+
+```bash
+make bootstrap-model-env
+source .venv-models/bin/activate
+make build-model-set
+make validate-models
+```
+
+Review the generated report:
+
+```text
+artifacts/reports/model_validation_report.html
+```
+
+This report tells you which artifacts are already present, which ones are
+missing, and which formats are intended to be shared across Android and macOS.
+
 ---
 
 ## What it does

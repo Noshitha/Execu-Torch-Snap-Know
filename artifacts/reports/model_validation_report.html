@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SnapKnow Model Artifact Report</title>
+  <style>
+    :root {
+      --bg: #f5efe6;
+      --ink: #1f2a37;
+      --card: #fffdf9;
+      --line: #d8cdbf;
+      --accent: #0f766e;
+      --warn: #b45309;
+      --good: #166534;
+      --bad: #991b1b;
+    }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f5efe6, #efe3d3);
+      color: var(--ink);
+    }
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin: 0 0 8px;
+    }
+    .lede {
+      max-width: 760px;
+      line-height: 1.5;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 24px 0 28px;
+    }
+    .stat, .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(31, 42, 55, 0.08);
+    }
+    .stat {
+      padding: 16px;
+    }
+    .stat strong {
+      display: block;
+      font-size: 1.8rem;
+      color: var(--accent);
+    }
+    .card {
+      padding: 18px;
+      overflow-x: auto;
+      margin-bottom: 18px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.94rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-top: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      color: #4b5563;
+      font-weight: 700;
+    }
+    .present { color: var(--good); font-weight: 700; }
+    .missing { color: var(--bad); font-weight: 700; }
+    footer {
+      margin-top: 24px;
+      color: #6b7280;
+      font-size: 0.92rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>SnapKnow Model Artifact Report</h1>
+    <p class="lede">This off-device report tracks which model artifacts are present, which ones are still placeholders, and which formats are shared across Android and macOS.</p>
+    <div class="stats">
+      <div class="stat"><strong>9</strong>Total artifacts</div>
+      <div class="stat"><strong>3</strong>Present locally</div>
+      <div class="stat"><strong>1</strong>Missing required</div>
+      <div class="stat"><strong>5</strong>Model groups</div>
+    </div>
+    
+            <section class="card">
+              <h2>Face Embedding</h2>
+              <p><strong>Status:</strong> active<br><strong>Purpose:</strong> Face recognition embeddings</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Artifact</th>
+                    <th>Format</th>
+                    <th>Runtime</th>
+                    <th>Backend</th>
+                    <th>Platforms</th>
+                    <th>State</th>
+                    <th>Size</th>
+                    <th>Path</th>
+                    <th>Warnings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                <tr>
+                  <td>face_embedding_pt</td>
+                  <td>torchscript</td>
+                  <td>PyTorch Mobile</td>
+                  <td>cpu</td>
+                  <td>android</td>
+                  <td class="present">present</td>
+                  <td>87.03 MB</td>
+                  <td>app/src/main/assets/face_embedding.pt</td>
+                  <td>TorchScript fallback is large; prefer the portable .pte artifact for final deployment.</td>
+                </tr>
+                
+                <tr>
+                  <td>face_embedding_xnnpack_pte</td>
+                  <td>pte</td>
+                  <td>ExecuTorch</td>
+                  <td>xnnpack</td>
+                  <td>android, macos</td>
+                  <td class="missing">missing</td>
+                  <td>n/a</td>
+                  <td>artifacts/android/face_embedding_xnnpack.pte</td>
+                  <td>ExecuTorch artifact missing; export step has not completed.<br>Required artifact missing.</td>
+                </tr>
+                
+                <tr>
+                  <td>face_embedding_qnn_pte</td>
+                  <td>pte</td>
+                  <td>ExecuTorch</td>
+                  <td>qnn</td>
+                  <td>android</td>
+                  <td class="missing">missing</td>
+                  <td>n/a</td>
+                  <td>artifacts/android/face_embedding_qnn.pte</td>
+                  <td>ExecuTorch artifact missing; export step has not completed.</td>
+                </tr>
+                
+                </tbody>
+              </table>
+            </section>
+            
+            <section class="card">
+              <h2>Object Detection</h2>
+              <p><strong>Status:</strong> active<br><strong>Purpose:</strong> Detect objects in camera frames</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Artifact</th>
+                    <th>Format</th>
+                    <th>Runtime</th>
+                    <th>Backend</th>
+                    <th>Platforms</th>
+                    <th>State</th>
+                    <th>Size</th>
+                    <th>Path</th>
+                    <th>Warnings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                <tr>
+                  <td>fssd_25_8bit_v2</td>
+                  <td>tflite</td>
+                  <td>TensorFlow Lite</td>
+                  <td>cpu</td>
+                  <td>android, macos</td>
+                  <td class="present">present</td>
+                  <td>0.22 MB</td>
+                  <td>app/src/main/assets/fssd_25_8bit_v2.tflite</td>
+                  <td>None</td>
+                </tr>
+                
+                </tbody>
+              </table>
+            </section>
+            
+            <section class="card">
+              <h2>Speech to Text</h2>
+              <p><strong>Status:</strong> experimental<br><strong>Purpose:</strong> Offline transcription</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Artifact</th>
+                    <th>Format</th>
+                    <th>Runtime</th>
+                    <th>Backend</th>
+                    <th>Platforms</th>
+                    <th>State</th>
+                    <th>Size</th>
+                    <th>Path</th>
+                    <th>Warnings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                <tr>
+                  <td>whisper_encoder_pte</td>
+                  <td>pte</td>
+                  <td>ExecuTorch</td>
+                  <td>xnnpack</td>
+                  <td>android, macos</td>
+                  <td class="missing">missing</td>
+                  <td>n/a</td>
+                  <td>artifacts/shared/whisper/whisper_encoder.pte</td>
+                  <td>ExecuTorch artifact missing; export step has not completed.</td>
+                </tr>
+                
+                <tr>
+                  <td>whisper_decoder_pte</td>
+                  <td>pte</td>
+                  <td>ExecuTorch</td>
+                  <td>xnnpack</td>
+                  <td>android, macos</td>
+                  <td class="missing">missing</td>
+                  <td>n/a</td>
+                  <td>artifacts/shared/whisper/whisper_decoder.pte</td>
+                  <td>ExecuTorch artifact missing; export step has not completed.</td>
+                </tr>
+                
+                </tbody>
+              </table>
+            </section>
+            
+            <section class="card">
+              <h2>Text to Speech</h2>
+              <p><strong>Status:</strong> experimental<br><strong>Purpose:</strong> Offline speech synthesis</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Artifact</th>
+                    <th>Format</th>
+                    <th>Runtime</th>
+                    <th>Backend</th>
+                    <th>Platforms</th>
+                    <th>State</th>
+                    <th>Size</th>
+                    <th>Path</th>
+                    <th>Warnings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                <tr>
+                  <td>piper_onnx_model</td>
+                  <td>onnx</td>
+                  <td>Piper</td>
+                  <td>onnx</td>
+                  <td>android, macos</td>
+                  <td class="missing">missing</td>
+                  <td>n/a</td>
+                  <td>artifacts/shared/piper/en_US-lessac-medium.onnx</td>
+                  <td>Piper model missing; stage the voice asset bundle before runtime integration.</td>
+                </tr>
+                
+                <tr>
+                  <td>piper_onnx_config</td>
+                  <td>json</td>
+                  <td>Piper</td>
+                  <td>onnx</td>
+                  <td>android, macos</td>
+                  <td class="missing">missing</td>
+                  <td>n/a</td>
+                  <td>artifacts/shared/piper/en_US-lessac-medium.onnx.json</td>
+                  <td>None</td>
+                </tr>
+                
+                </tbody>
+              </table>
+            </section>
+            
+            <section class="card">
+              <h2>Vision Language Model</h2>
+              <p><strong>Status:</strong> staged<br><strong>Purpose:</strong> Scene understanding and question answering</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Artifact</th>
+                    <th>Format</th>
+                    <th>Runtime</th>
+                    <th>Backend</th>
+                    <th>Platforms</th>
+                    <th>State</th>
+                    <th>Size</th>
+                    <th>Path</th>
+                    <th>Warnings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                <tr>
+                  <td>smolvlm_manifest</td>
+                  <td>json</td>
+                  <td>ExecuTorch</td>
+                  <td>xnnpack</td>
+                  <td>android, macos</td>
+                  <td class="present">present</td>
+                  <td>0.00 MB</td>
+                  <td>app/src/main/assets/vlm/smolvlm_manifest.json</td>
+                  <td>None</td>
+                </tr>
+                
+                </tbody>
+              </table>
+            </section>
+            
+    <footer>Generated at 2026-06-29T22:08:13.916622+00:00. This report is safe to host as a static page later if you want a Vercel viewer.</footer>
+  </main>
+</body>
+</html>
