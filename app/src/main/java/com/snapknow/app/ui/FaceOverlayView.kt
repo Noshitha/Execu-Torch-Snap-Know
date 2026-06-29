@@ -22,7 +22,14 @@ class FaceOverlayView @JvmOverloads constructor(
         val isKnown: Boolean
     )
 
+    data class ObjectAnnotation(
+        val bounds: RectF,
+        val label: String,
+        val score: Float
+    )
+
     private var faces: List<FaceAnnotation> = emptyList()
+    private var objects: List<ObjectAnnotation> = emptyList()
 
     // Paint for known faces: green box
     private val knownBoxPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -42,6 +49,23 @@ class FaceOverlayView @JvmOverloads constructor(
     private val labelBgPaint = Paint().apply {
         style = Paint.Style.FILL
         color = Color.argb(200, 0, 0, 0)
+    }
+
+    private val objectBoxPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        color = Color.argb(220, 255, 183, 77)
+        strokeWidth = 3f
+    }
+
+    private val objectLabelBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = Color.argb(220, 76, 54, 30)
+    }
+
+    private val objectLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        textSize = 34f
+        typeface = Typeface.DEFAULT_BOLD
     }
 
     private val labelTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -67,8 +91,9 @@ class FaceOverlayView @JvmOverloads constructor(
      * [imageWidth] / [imageHeight] are the dimensions of the camera frame
      * from which [faces] bounding boxes were computed.
      */
-    fun updateFaces(
+    fun updateDetections(
         rawFaces: List<Pair<android.graphics.Rect, String>>,
+        rawObjects: List<ObjectAnnotation>,
         imageWidth: Int,
         imageHeight: Int
     ) {
@@ -89,11 +114,24 @@ class FaceOverlayView @JvmOverloads constructor(
                 isKnown = label != "Unknown" && label.isNotEmpty()
             )
         }
+        objects = rawObjects.map { objectAnnotation ->
+            ObjectAnnotation(
+                bounds = RectF(
+                    objectAnnotation.bounds.left * scaleX,
+                    objectAnnotation.bounds.top * scaleY,
+                    objectAnnotation.bounds.right * scaleX,
+                    objectAnnotation.bounds.bottom * scaleY
+                ),
+                label = objectAnnotation.label,
+                score = objectAnnotation.score
+            )
+        }
         invalidate()
     }
 
     fun clearFaces() {
         faces = emptyList()
+        objects = emptyList()
         invalidate()
     }
 
@@ -101,6 +139,9 @@ class FaceOverlayView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        objects.forEach { detectedObject ->
+            drawObject(canvas, detectedObject)
+        }
         faces.forEach { face ->
             drawFace(canvas, face)
         }
@@ -125,5 +166,21 @@ class FaceOverlayView @JvmOverloads constructor(
 
         canvas.drawRoundRect(labelLeft, labelTop, labelRight, labelBottom, 8f, 8f, labelBgPaint)
         canvas.drawText(text, labelLeft + 12f, labelBottom - 10f, textPaint)
+    }
+
+    private fun drawObject(canvas: Canvas, detectedObject: ObjectAnnotation) {
+        val rect = detectedObject.bounds
+        canvas.drawRoundRect(rect, 12f, 12f, objectBoxPaint)
+
+        val text = "${detectedObject.label} ${(detectedObject.score * 100).toInt()}%"
+        val textWidth = objectLabelPaint.measureText(text)
+        val textHeight = objectLabelPaint.textSize
+        val labelLeft = rect.left
+        val labelTop = (rect.bottom + 8f).coerceAtMost(height - textHeight - 16f)
+        val labelRight = (labelLeft + textWidth + 24f).coerceAtMost(width.toFloat())
+        val labelBottom = labelTop + textHeight + 16f
+
+        canvas.drawRoundRect(labelLeft, labelTop, labelRight, labelBottom, 8f, 8f, objectLabelBgPaint)
+        canvas.drawText(text, labelLeft + 12f, labelBottom - 10f, objectLabelPaint)
     }
 }

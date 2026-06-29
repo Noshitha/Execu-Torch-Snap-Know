@@ -83,6 +83,9 @@ dependencies {
     // PyTorch Mobile — loads face_embedding.pt (TorchScript, CPU inference)
     implementation("org.pytorch:pytorch_android:2.1.0")
 
+    // TensorFlow Lite runtime for the small on-device object detector
+    implementation("org.tensorflow:tensorflow-lite:2.14.0")
+
     // ExecuTorch Android AAR  ← built with QNN backend via scripts/build_android_qnn.sh
     // After building, place executorch.aar in app/libs/
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar", "*.jar"))))

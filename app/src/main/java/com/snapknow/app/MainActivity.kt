@@ -22,10 +22,14 @@ import com.snapknow.app.camera.CameraHelper
 import com.snapknow.app.camera.FaceAnalyzer
 import com.snapknow.app.database.entity.FaceMemory
 import com.snapknow.app.databinding.ActivityMainBinding
+import com.snapknow.app.inference.TfliteObjectDetector
+import com.snapknow.app.ui.FaceOverlayView
 import com.snapknow.app.voice.SpeechTranscriberMode
 import com.snapknow.app.voice.TtsManager
 import com.snapknow.app.voice.VoiceRecognitionManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val TAG = "MainActivity"
 
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tts: TtsManager
     private lateinit var voice: VoiceRecognitionManager
     private lateinit var cameraHelper: CameraHelper
+    private var objectDetector: TfliteObjectDetector? = null
     private var isCameraStarted = false
 
     // Track latest face bitmaps so the "remember face" action captures the right frame
@@ -87,6 +92,7 @@ class MainActivity : AppCompatActivity() {
         if (::voice.isInitialized) voice.destroy()
         tts.shutdown()
         if (::cameraHelper.isInitialized) cameraHelper.stop()
+        objectDetector?.close()
     }
 
     // ─── Setup ────────────────────────────────────────────────────────────────
@@ -124,8 +130,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAfterPermissions() {
         setupVoiceRecognition()
+        setupObjectDetector()
         setupCamera()
         updateCameraControls()
+    }
+
+    private fun setupObjectDetector() {
+        val detector = TfliteObjectDetector(this)
+        objectDetector = detector
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                detector.preload()
+            }
+            viewModel.onObjectDetectorStatusChanged(detector.status)
+        }
     }
 
     private fun setupVoiceRecognition() {
@@ -148,7 +166,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupCamera() {
-        val analyzer = FaceAnalyzer { detectedFaces, imgWidth, imgHeight ->
+        val analyzer = FaceAnalyzer(objectDetector) { detectedFaces, detectedObjects, imgWidth, imgHeight ->
             // Store latest frames for the "remember this face" action
             latestFaceBitmaps = detectedFaces.map { Pair(it.trackingId, it.bitmap) }
             lastFaceImageDims  = Pair(imgWidth, imgHeight)
@@ -161,12 +179,28 @@ class MainActivity : AppCompatActivity() {
                 val label = labelled.getOrNull(i)?.second ?: "Unknown"
                 Pair(face.bounds, label)
             }
+            val objectOverlayData = detectedObjects.map { detectedObject ->
+                FaceOverlayView.ObjectAnnotation(
+                    bounds = detectedObject.bounds,
+                    label = detectedObject.label,
+                    score = detectedObject.score
+                )
+            }
 
             runOnUiThread {
-                binding.faceOverlay.updateFaces(overlayData, imgWidth, imgHeight)
+                binding.faceOverlay.updateDetections(overlayData, objectOverlayData, imgWidth, imgHeight)
                 // Show the "remember face" button only when a face is in frame
                 binding.rememberFaceButton.visibility =
                     if (isCameraStarted && detectedFaces.isNotEmpty()) View.VISIBLE else View.GONE
+                viewModel.onObjectDetectorStatusChanged(objectDetector?.status ?: "Object detector unavailable")
+                viewModel.onObjectDetectionsUpdated(
+                    detectedObjects.joinToString(
+                        prefix = if (detectedObjects.isEmpty()) "" else "Objects in view: ",
+                        separator = " · "
+                    ) { detectedObject ->
+                        "${detectedObject.label} ${(detectedObject.score * 100).toInt()}%"
+                    }.ifBlank { "No objects highlighted right now." }
+                )
             }
         }
 
@@ -344,7 +378,9 @@ class MainActivity : AppCompatActivity() {
                         "Start the camera or ${state.speechInputState.message.lowercase()}"
                     }
                     binding.responseText.text = state.response
-                    binding.modelStatusChip.text = state.embeddingModelStatus
+                    binding.modelStatusChip.text =
+                        "${state.embeddingModelStatus} | ${state.objectDetectorStatus}"
+                    binding.objectSummaryText.text = state.objectDetectionSummary
                     binding.voicePromptText.text = if (state.awaitingFaceNameForBitmap != null) {
                         "Example: This is John, my son. He helps me with groceries."
                     } else if (state.speechInputState.mode == SpeechTranscriberMode.UNAVAILABLE) {
@@ -384,7 +420,12 @@ class MainActivity : AppCompatActivity() {
         binding.flipCameraButton.visibility = if (isCameraStarted) View.VISIBLE else View.GONE
         if (!isCameraStarted) {
             binding.rememberFaceButton.visibility = View.GONE
-            binding.faceOverlay.updateFaces(emptyList(), lastFaceImageDims.first, lastFaceImageDims.second)
+            binding.faceOverlay.updateDetections(
+                rawFaces = emptyList(),
+                rawObjects = emptyList(),
+                imageWidth = lastFaceImageDims.first,
+                imageHeight = lastFaceImageDims.second
+            )
         }
     }
 

@@ -124,6 +124,15 @@
                 android:textColor="#CCFFFFFF"
                 android:textSize="13sp" />
 
+            <TextView
+                android:id="@+id/object_summary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Object highlights will appear here when the camera is on."
+                android:textColor="#FFD28B57"
+                android:textSize="13sp" />
+
             <!-- Response text — what the assistant said -->
             <TextView
                 android:id="@+id/response_text"
