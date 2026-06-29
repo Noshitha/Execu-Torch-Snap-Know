@@ -10,6 +10,8 @@ sealed class Command {
     data class StoreObject(val objectName: String, val location: String) : Command()
     data class QueryObject(val objectName: String) : Command()
     data class StoreFace(val name: String, val relationship: String) : Command()
+    object DescribeScene : Command()
+    data class QueryScene(val question: String) : Command()
     object QueryFace : Command()
     object ListMemories : Command()
     data class ForgetObject(val objectName: String) : Command()
@@ -120,6 +122,16 @@ object CommandParser {
         Regex("""have (?:i|we) met (?:this|that)(?: person)?(?: before)?[?]?""", RegexOption.IGNORE_CASE)
     )
 
+    // ── Scene understanding ──────────────────────────────────────────────────
+    private val DESCRIBE_SCENE_PATTERNS = listOf(
+        Regex("""^(?:describe|tell me about) (?:what you see|this scene|the scene|what's in front of me|what is in front of me)[.!?]?$""", RegexOption.IGNORE_CASE),
+        Regex("""^(?:what do you see|what am i looking at|what's in the camera view|what is in the camera view)[.!?]?$""", RegexOption.IGNORE_CASE)
+    )
+
+    private val QUERY_SCENE_PATTERNS = listOf(
+        Regex("""^(?:scene question|question about this scene|look at this and answer)[,:]?\s+(.+?)[.!?]?$""", RegexOption.IGNORE_CASE)
+    )
+
     // ── List Memories ─────────────────────────────────────────────────────────
     private val LIST_PATTERNS = listOf(
         Regex("""what do you remember[?]?""", RegexOption.IGNORE_CASE),
@@ -175,12 +187,31 @@ object CommandParser {
             }
         }
 
-        // 5. List memories?
+        // 5. Scene describe?
+        DESCRIBE_SCENE_PATTERNS.forEach { pattern ->
+            if (pattern.matches(text)) {
+                Log.d(TAG, "DescribeScene")
+                return Command.DescribeScene
+            }
+        }
+
+        // 6. Scene question?
+        QUERY_SCENE_PATTERNS.forEach { pattern ->
+            pattern.matchEntire(text)?.let { match ->
+                val question = match.groupValues[1].trim()
+                if (question.isNotBlank()) {
+                    Log.d(TAG, "QueryScene: '$question'")
+                    return Command.QueryScene(question)
+                }
+            }
+        }
+
+        // 7. List memories?
         LIST_PATTERNS.forEach { pattern ->
             if (pattern.containsMatchIn(text)) return Command.ListMemories
         }
 
-        // 6. Forget?
+        // 8. Forget?
         FORGET_OBJ.find(text)?.let { m ->
             val target = m.groupValues[1].trim()
             if (target.split(" ").all { it.firstOrNull()?.isUpperCase() == true }) {

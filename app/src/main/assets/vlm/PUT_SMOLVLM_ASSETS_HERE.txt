@@ -1,0 +1,11 @@
+Place the staged SmolVLM Android artifacts in this folder:
+
+- vlm/smolvlm/vision_encoder.pte
+- vlm/smolvlm/projector.pte
+- vlm/smolvlm/text_decoder.pte
+- vlm/smolvlm/tokenizer.json
+- vlm/smolvlm/tokenizer_config.json
+- vlm/smolvlm/special_tokens_map.json
+
+This branch only runs the vision encoder path on-device today.
+The decoder/tokenizer assets are still required before spoken scene answers can be generated.

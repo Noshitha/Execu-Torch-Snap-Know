@@ -6,7 +6,8 @@
  *
  * API (called from ExecuTorchModule.kt):
  *   nativeLoadModel(path)           → handle (jlong)
- *   nativeRunInference(handle, ...) → float[] output
+ *   nativeRunNamedInference(handle, ...) → float[] output
+ *   nativeHasMethod(handle, name)   → boolean
  *   nativeDestroyModule(handle)     → void
  */
 
@@ -73,9 +74,9 @@ Java_com_snapknow_app_inference_ExecuTorchModule_nativeLoadModel(
  * @return           Flat float array of model output, or empty array on error
  */
 JNIEXPORT jfloatArray JNICALL
-Java_com_snapknow_app_inference_ExecuTorchModule_nativeRunInference(
+Java_com_snapknow_app_inference_ExecuTorchModule_nativeRunNamedInference(
         JNIEnv* env, jobject /*thiz*/,
-        jlong handle, jfloatArray jInput, jlongArray jShape) {
+        jlong handle, jstring jMethodName, jfloatArray jInput, jlongArray jShape) {
 
     if (handle == 0L) {
         LOGE("Invalid module handle");
@@ -83,6 +84,7 @@ Java_com_snapknow_app_inference_ExecuTorchModule_nativeRunInference(
     }
 
     auto* module = reinterpret_cast<Module*>(handle);
+    std::string method_name = jstringToStd(env, jMethodName);
 
     // ── Unpack input ────────────────────────────────────────────────────────
     jsize inputLen  = env->GetArrayLength(jInput);
@@ -109,10 +111,10 @@ Java_com_snapknow_app_inference_ExecuTorchModule_nativeRunInference(
     }
 
     // ── Execute model ────────────────────────────────────────────────────────
-    auto execResult = module->execute("forward", {EValue(tensorResult.get())});
+    auto execResult = module->execute(method_name, {EValue(tensorResult.get())});
 
     if (!execResult.ok()) {
-        LOGE("Inference failed, error=%d", static_cast<int>(execResult.error()));
+        LOGE("Inference failed for method '%s', error=%d", method_name.c_str(), static_cast<int>(execResult.error()));
         return env->NewFloatArray(0);
     }
 
@@ -132,6 +134,20 @@ Java_com_snapknow_app_inference_ExecuTorchModule_nativeRunInference(
 
     LOGI("Inference OK, output size=%lld", (long long)outSize);
     return result;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_snapknow_app_inference_ExecuTorchModule_nativeHasMethod(
+        JNIEnv* env, jobject /*thiz*/, jlong handle, jstring jMethodName) {
+
+    if (handle == 0L) {
+        return JNI_FALSE;
+    }
+
+    auto* module = reinterpret_cast<Module*>(handle);
+    std::string method_name = jstringToStd(env, jMethodName);
+    auto load_result = module->load_method(method_name);
+    return load_result == Error::Ok ? JNI_TRUE : JNI_FALSE;
 }
 
 /**

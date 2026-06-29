@@ -7,6 +7,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.snapknow.app.database.MemoryRepository
 import com.snapknow.app.inference.FaceEmbeddingModel
+import com.snapknow.app.inference.ImageVlmModel
+import com.snapknow.app.inference.ImageVlmRequest
 import com.snapknow.app.nlp.Command
 import com.snapknow.app.nlp.CommandParser
 import com.snapknow.app.voice.SpeechBackend
@@ -70,12 +72,22 @@ data class UiState(
     /** Human-readable status for the TFLite detector path */
     val objectDetectorStatus: String = "Object detector loading…",
     /** Most recent object detector summary shown in the bottom card */
-    val objectDetectionSummary: String = "Object highlights will appear here when the camera is on."
+    val objectDetectionSummary: String = "Object highlights will appear here when the camera is on.",
+    /** Human-readable status for the staged image VLM path */
+    val vlmModelStatus: String = "Scene VLM: checking assets…",
+    /** Pending camera snapshot request for scene description / question answering. */
+    val pendingSceneRequest: PendingSceneRequest? = null
 )
 
 data class PendingSpeech(
     val id: Long,
     val request: SpeechOutputRequest
+)
+
+data class PendingSceneRequest(
+    val id: Long,
+    val prompt: String,
+    val isQuestion: Boolean
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -90,6 +102,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     // Constructed immediately (lightweight); preload() does the heavy IO on a bg thread
     val faceEmbeddingModel = FaceEmbeddingModel(application)
+    private val imageVlmModel = ImageVlmModel(application)
+    private var isCameraRunning = false
 
     // Throttle TTS face announcements (don't repeat same person within 8 s)
     private val recentlyAnnouncedFaces = LinkedHashMap<Int, Long>()
@@ -101,6 +115,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         updateState { copy(embeddingModelStatus = "Loading model…") }
         viewModelScope.launch {
             faceEmbeddingModel.preload()
+            imageVlmModel.preload()
             if (faceEmbeddingModel.isAvailable) {
                 val removed = repo.purgeIncompatibleFaceSamples(faceEmbeddingModel.embeddingSize)
                 if (removed > 0) {
@@ -115,7 +130,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 "Face recognition ON (PyTorch Mobile)"
             else
                 "Detection only — model not loaded"
-            updateState { copy(embeddingModelStatus = status) }
+            updateState {
+                copy(
+                    embeddingModelStatus = status,
+                    vlmModelStatus = imageVlmModel.getReadiness().statusLine
+                )
+            }
             Log.i(TAG, status)
         }
     }
@@ -150,6 +170,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     speak("Please point the camera at the person first, then say their name.")
                 }
             }
+            is Command.DescribeScene -> requestSceneCapture(
+                prompt = "Describe what you see in this image for a dementia-friendly memory assistant.",
+                isQuestion = false
+            )
+            is Command.QueryScene    -> requestSceneCapture(cmd.question, isQuestion = true)
             is Command.QueryFace     -> speak("Point the camera at the person so I can recognise them.")
             is Command.ListMemories  -> handleListMemories()
             is Command.ForgetObject  -> handleForgetObject(cmd)
@@ -277,6 +302,50 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         clearResolvedFaceCache()
         val updatedFaces = repo.getAllFaces()
         updateState { copy(savedFacesSummary = buildSavedFacesSummary(updatedFaces)) }
+    }
+
+    fun onCameraRunningChanged(isRunning: Boolean) {
+        isCameraRunning = isRunning
+    }
+
+    fun requestSceneDescription() {
+        requestSceneCapture(
+            prompt = "Describe what you see in this image for a dementia-friendly memory assistant.",
+            isQuestion = false
+        )
+    }
+
+    fun requestSceneQuestion(question: String) {
+        requestSceneCapture(question.trim(), isQuestion = true)
+    }
+
+    fun onSceneRequestConsumed(id: Long) {
+        if (_uiState.value.pendingSceneRequest?.id == id) {
+            updateState { copy(pendingSceneRequest = null) }
+        }
+    }
+
+    fun handleSceneSnapshot(request: PendingSceneRequest, bitmap: Bitmap?) {
+        onSceneRequestConsumed(request.id)
+        if (bitmap == null) {
+            speak("I couldn't capture the current camera frame. Try holding still for a moment and ask again.")
+            return
+        }
+
+        updateState { copy(status = "Analyzing scene…", response = "Analyzing the current camera frame…") }
+        viewModelScope.launch {
+            val response = imageVlmModel.analyze(
+                bitmap = bitmap,
+                request = ImageVlmRequest(prompt = request.prompt, isQuestion = request.isQuestion)
+            )
+            updateState {
+                copy(
+                    response = "${response.spokenText}\n\n${response.debugSummary}",
+                    vlmModelStatus = imageVlmModel.getReadiness().statusLine
+                )
+            }
+            speak(response.spokenText)
+        }
     }
 
     fun formatMemoryDisplay(face: com.snapknow.app.database.entity.FaceMemory): String {
@@ -476,6 +545,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         updateState { copy(isSpeaking = false) }
     }
 
+    private fun requestSceneCapture(prompt: String, isQuestion: Boolean) {
+        if (prompt.isBlank()) {
+            speak("Tell me what you want to ask about the scene.")
+            return
+        }
+        val readiness = imageVlmModel.getReadiness()
+        if (!isCameraRunning) {
+            speak("Start the camera first so I can capture the scene.")
+            return
+        }
+        if (!readiness.canProcessImage) {
+            speak(imageVlmModel.getUnavailableMessage())
+            updateState { copy(vlmModelStatus = readiness.statusLine) }
+            return
+        }
+        updateState {
+            copy(
+                status = "Capturing scene…",
+                response = if (isQuestion) "Capturing the frame for your scene question…" else "Capturing the frame for a scene description…",
+                pendingSceneRequest = PendingSceneRequest(
+                    id = nextSpeechRequestId++,
+                    prompt = prompt,
+                    isQuestion = isQuestion
+                ),
+                vlmModelStatus = readiness.statusLine
+            )
+        }
+    }
+
     private fun updateState(block: UiState.() -> UiState) {
         _uiState.value = _uiState.value.block()
     }
@@ -555,5 +653,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     override fun onCleared() {
         super.onCleared()
         faceEmbeddingModel.close()
+        imageVlmModel.close()
     }
 }

@@ -1,0 +1,44 @@
+{
+  "model_id": "HuggingFaceTB/SmolVLM-256M-Instruct",
+  "display_name": "SmolVLM-256M-Instruct",
+  "manifest_asset_path": "vlm/smolvlm_manifest.json",
+  "notes": "This branch wires the Android asset contract and vision-encoder runtime path. Natural-language scene answers still require a tokenizer and decoder generation loop.",
+  "image_input": {
+    "width": 384,
+    "height": 384,
+    "mean": [0.5, 0.5, 0.5],
+    "std": [0.5, 0.5, 0.5]
+  },
+  "artifacts": [
+    {
+      "name": "vision_encoder",
+      "asset_path": "vlm/smolvlm/vision_encoder.pte",
+      "required_for": "scene_embedding"
+    },
+    {
+      "name": "projector",
+      "asset_path": "vlm/smolvlm/projector.pte",
+      "required_for": "scene_qa"
+    },
+    {
+      "name": "text_decoder",
+      "asset_path": "vlm/smolvlm/text_decoder.pte",
+      "required_for": "scene_qa"
+    },
+    {
+      "name": "tokenizer",
+      "asset_path": "vlm/smolvlm/tokenizer.json",
+      "required_for": "scene_qa"
+    },
+    {
+      "name": "tokenizer_config",
+      "asset_path": "vlm/smolvlm/tokenizer_config.json",
+      "required_for": "scene_qa"
+    },
+    {
+      "name": "special_tokens_map",
+      "asset_path": "vlm/smolvlm/special_tokens_map.json",
+      "required_for": "scene_qa"
+    }
+  ]
+}
