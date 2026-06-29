@@ -22,6 +22,7 @@ import com.snapknow.app.camera.CameraHelper
 import com.snapknow.app.camera.FaceAnalyzer
 import com.snapknow.app.database.entity.FaceMemory
 import com.snapknow.app.databinding.ActivityMainBinding
+import com.snapknow.app.voice.SpeechTranscriberMode
 import com.snapknow.app.voice.TtsManager
 import com.snapknow.app.voice.VoiceRecognitionManager
 import kotlinx.coroutines.launch
@@ -42,8 +43,8 @@ class MainActivity : AppCompatActivity() {
     private var latestFaceBitmaps: List<Pair<Int?, Bitmap>> = emptyList()
     private var lastFaceImageDims = Pair(1, 1)
 
-    // Prevent TTS from re-firing on every StateFlow emission while isSpeaking=true
-    private var lastSpokenResponse = ""
+    // Prevent duplicate speech execution when unrelated UI state changes re-emit.
+    private var lastHandledSpeechRequestId: Long? = null
 
     // ─── Permission launcher ──────────────────────────────────────────────────
 
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause()   { super.onPause();   if (::voice.isInitialized) voice.mute() }
     override fun onDestroy() {
         super.onDestroy()
-        if (::voice.isInitialized) voice.stop()
+        if (::voice.isInitialized) voice.destroy()
         tts.shutdown()
         if (::cameraHelper.isInitialized) cameraHelper.stop()
     }
@@ -94,6 +95,7 @@ class MainActivity : AppCompatActivity() {
         tts = TtsManager(
             context = this,
             onStart = {
+                viewModel.onSpeechStarted()
                 if (::voice.isInitialized) voice.mute()
             },
             onDone  = {
@@ -102,15 +104,28 @@ class MainActivity : AppCompatActivity() {
                 binding.root.postDelayed({
                     if (::voice.isInitialized) voice.unmute()
                 }, 600)
+            },
+            onError = { message ->
+                val backend = tts.state.value.activeBackend
+                viewModel.onSpeechFailed(backend, message, null)
             }
         )
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tts.state.collect { state ->
+                    if (state.isReady) {
+                        viewModel.onSpeechReady(state.activeBackend, state.status)
+                    }
+                }
+            }
+        }
     }
 
     private fun setupAfterPermissions() {
         setupVoiceRecognition()
         setupCamera()
         updateCameraControls()
-        updateMicControls(isListening = false)
     }
 
     private fun setupVoiceRecognition() {
@@ -120,10 +135,13 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "Voice result: $text")
                 runOnUiThread { viewModel.onVoiceInput(text) }
             },
-            onListeningStateChanged = { listening ->
+            onStateChanged = { speechInputState ->
                 runOnUiThread {
-                    viewModel.onListeningChanged(listening)
-                    updateMicControls(listening)
+                    viewModel.onSpeechInputStateChanged(speechInputState)
+                    updateMicControls(
+                        canStart = speechInputState.canStart,
+                        canStop = speechInputState.canStop
+                    )
                 }
             }
         )
@@ -311,31 +329,52 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
                     binding.statusText.text = if (state.awaitingFaceNameForBitmap != null) {
-                        "Tap Start Mic, then say the person's name and relationship."
+                        if (state.speechInputState.mode == SpeechTranscriberMode.LISTENING ||
+                            state.speechInputState.mode == SpeechTranscriberMode.PROCESSING
+                        ) {
+                            state.status
+                        } else {
+                            "Tap Start Mic, then say the person's name and relationship."
+                        }
                     } else if (state.isListening) {
                         state.status
                     } else if (isCameraStarted) {
-                        "Camera is on. Tap Start Mic when you want to speak."
+                        "Camera is on. ${state.speechInputState.message}"
                     } else {
-                        "Start the camera or tap Start Mic when you're ready"
+                        "Start the camera or ${state.speechInputState.message.lowercase()}"
                     }
                     binding.responseText.text = state.response
                     binding.modelStatusChip.text = state.embeddingModelStatus
                     binding.voicePromptText.text = if (state.awaitingFaceNameForBitmap != null) {
                         "Example: This is John, my son. He helps me with groceries."
+                    } else if (state.speechInputState.mode == SpeechTranscriberMode.UNAVAILABLE) {
+                        "${state.speechInputState.engineLabel}: ${state.speechInputState.message}"
+                    } else if (state.speechInputState.mode == SpeechTranscriberMode.ERROR) {
+                        "${state.speechInputState.engineLabel}: ${state.speechInputState.message}"
                     } else if (isCameraStarted) {
-                        "Use Remember Face for a person, or Start Mic for another request."
+                        "Use Remember Face for a person, or Start Mic for another request. ${state.speechInputState.engineLabel} is active."
                     } else {
-                        "Start the camera when you want live face preview, or use Start Mic for voice-only help."
+                        "Start the camera when you want live face preview, or use Start Mic for voice-only help with ${state.speechInputState.engineLabel.lowercase()}."
                     }
+                    updateMicControls(
+                        canStart = state.speechInputState.canStart,
+                        canStop = state.speechInputState.canStop
+                    )
 
-                    // Speak new responses — guard against duplicate calls on every state update
-                    val resp = state.response
-                    if (state.isSpeaking && resp.isNotBlank() && resp != lastSpokenResponse) {
-                        lastSpokenResponse = resp
-                        tts.speak(resp)
+                    val pendingSpeech = state.pendingSpeech
+                    if (pendingSpeech != null && pendingSpeech.id != lastHandledSpeechRequestId) {
+                        lastHandledSpeechRequestId = pendingSpeech.id
+                        val started = tts.speak(pendingSpeech.request)
+                        viewModel.onSpeechRequestConsumed(pendingSpeech.id)
+                        if (!started) {
+                            viewModel.onSpeechFailed(
+                                backend = tts.state.value.activeBackend,
+                                message = tts.state.value.lastError
+                                    ?: "Speech output is not ready yet.",
+                                spokenText = pendingSpeech.request.text
+                            )
+                        }
                     }
-                    if (!state.isSpeaking) lastSpokenResponse = ""
                 }
             }
         }
@@ -349,9 +388,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateMicControls(isListening: Boolean) {
-        binding.startMicButton.isEnabled = !isListening
-        binding.stopMicButton.isEnabled = isListening
+    private fun updateMicControls(canStart: Boolean, canStop: Boolean) {
+        binding.startMicButton.isEnabled = canStart
+        binding.stopMicButton.isEnabled = canStop
     }
 
     // ─── Permissions ──────────────────────────────────────────────────────────

@@ -9,6 +9,10 @@ import com.snapknow.app.database.MemoryRepository
 import com.snapknow.app.inference.FaceEmbeddingModel
 import com.snapknow.app.nlp.Command
 import com.snapknow.app.nlp.CommandParser
+import com.snapknow.app.voice.SpeechBackend
+import com.snapknow.app.voice.SpeechOutputRequest
+import com.snapknow.app.voice.SpeechTranscriberMode
+import com.snapknow.app.voice.SpeechTranscriberState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,6 +37,22 @@ data class UiState(
     val isListening: Boolean = false,
     /** True while TTS is speaking (mic should be muted) */
     val isSpeaking: Boolean = false,
+    /** Explicit one-shot speech request consumed by the activity layer */
+    val pendingSpeech: PendingSpeech? = null,
+    /** Human-readable status for the active speech backend */
+    val speechStatus: String = "Speech output initializing…",
+    /** Backend currently used for spoken responses */
+    val speechBackend: SpeechBackend = SpeechBackend.ANDROID_SYSTEM,
+    /** Most recent speech error, if any */
+    val speechError: String? = null,
+    /** Current speech-to-text session state */
+    val speechInputState: SpeechTranscriberState = SpeechTranscriberState(
+        mode = SpeechTranscriberMode.IDLE,
+        engineLabel = "Android system speech",
+        message = "Tap Start Mic when you're ready.",
+        canStart = true,
+        canStop = false
+    ),
     /**
      * When non-null, the app is awaiting a name for this face.
      * The UI disables the "query face" flow and pipes the next voice input
@@ -49,12 +69,18 @@ data class UiState(
     val embeddingModelStatus: String = "Loading…"
 )
 
+data class PendingSpeech(
+    val id: Long,
+    val request: SpeechOutputRequest
+)
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private var nextSpeechRequestId = 1L
 
     private val repo = MemoryRepository(application)
 
@@ -186,7 +212,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 faceNamingPrompt = prompt,
                 status = "Listening for a name…",
                 response = prompt,
-                isSpeaking = true
+                isSpeaking = true,
+                pendingSpeech = PendingSpeech(
+                    id = nextSpeechRequestId++,
+                    request = SpeechOutputRequest(text = prompt)
+                )
             )
         }
     }
@@ -363,21 +393,76 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // ─── Helpers ──────────────────────────────────────────────────────────────
 
     fun speak(text: String) {
-        updateState { copy(response = text, isSpeaking = true) }
-        // Actual TTS call happens in MainActivity via a callback observed on _uiState
-    }
-
-    fun onListeningChanged(isListening: Boolean) {
-        val status = when {
-            isListening && _uiState.value.isFaceNamingMode -> "Listening for a name…"
-            isListening -> "Listening…"
-            _uiState.value.isFaceNamingMode -> "Waiting for face details…"
-            else -> "Tap mic to speak"
+        updateState {
+            copy(
+                response = text,
+                isSpeaking = true,
+                pendingSpeech = PendingSpeech(
+                    id = nextSpeechRequestId++,
+                    request = SpeechOutputRequest(text = text)
+                )
+            )
         }
-        updateState { copy(isListening = isListening, status = status) }
     }
 
-    fun onSpeakingDone() { updateState { copy(isSpeaking = false) } }
+    fun onSpeechRequestConsumed(id: Long) {
+        if (_uiState.value.pendingSpeech?.id == id) {
+            updateState { copy(pendingSpeech = null) }
+        }
+    }
+
+    fun onSpeechInputStateChanged(speechInputState: SpeechTranscriberState) {
+        val isListening = speechInputState.mode == SpeechTranscriberMode.STARTING ||
+            speechInputState.mode == SpeechTranscriberMode.LISTENING ||
+            speechInputState.mode == SpeechTranscriberMode.PROCESSING ||
+            speechInputState.mode == SpeechTranscriberMode.MUTED
+        val status = when {
+            speechInputState.mode == SpeechTranscriberMode.LISTENING && _uiState.value.isFaceNamingMode ->
+                "Listening for a name…"
+            speechInputState.mode == SpeechTranscriberMode.PROCESSING && _uiState.value.isFaceNamingMode ->
+                "Saving face details…"
+            _uiState.value.isFaceNamingMode && speechInputState.mode == SpeechTranscriberMode.IDLE ->
+                "Ready for the person's name."
+            else -> speechInputState.message
+        }
+        updateState {
+            copy(
+                isListening = isListening,
+                status = status,
+                speechInputState = speechInputState
+            )
+        }
+    }
+
+    fun onSpeechStarted() {
+        updateState { copy(isSpeaking = true, speechError = null) }
+    }
+
+    fun onSpeechReady(backend: SpeechBackend, status: String) {
+        updateState {
+            copy(
+                speechBackend = backend,
+                speechStatus = status,
+                speechError = null
+            )
+        }
+    }
+
+    fun onSpeechFailed(backend: SpeechBackend, message: String, spokenText: String?) {
+        updateState {
+            copy(
+                isSpeaking = false,
+                speechBackend = backend,
+                speechStatus = message,
+                speechError = message,
+                response = spokenText ?: response
+            )
+        }
+    }
+
+    fun onSpeakingDone() {
+        updateState { copy(isSpeaking = false) }
+    }
 
     private fun updateState(block: UiState.() -> UiState) {
         _uiState.value = _uiState.value.block()

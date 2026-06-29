@@ -1,72 +1,147 @@
 package com.snapknow.app.voice
 
 import android.content.Context
-import android.speech.tts.TextToSpeech
-import android.speech.tts.UtteranceProgressListener
 import android.util.Log
-import java.util.Locale
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 private const val TAG = "TtsManager"
 
-/**
- * Wraps Android's [TextToSpeech] engine.
- * Runs fully on-device — no network required.
- *
- * Callbacks [onStart] / [onDone] can be used to mute/unmute voice recognition
- * while the assistant is speaking, preventing it from hearing itself.
- */
 class TtsManager(
     context: Context,
+    preferredBackend: SpeechBackendPreference = SpeechBackendPreference.PIPER_WITH_ANDROID_FALLBACK,
     private val onStart: () -> Unit = {},
-    private val onDone: () -> Unit = {}
+    private val onDone: () -> Unit = {},
+    private val onError: (String) -> Unit = {}
 ) {
-    private var tts: TextToSpeech? = null
-    private var isReady = false
+    private val appContext = context.applicationContext
+    private val _state = MutableStateFlow(
+        SpeechOutputState(preferredBackend = preferredBackend)
+    )
+    val state: StateFlow<SpeechOutputState> = _state.asStateFlow()
+
+    private var engine: SpeechOutputEngine = selectEngine(preferredBackend)
+    private var pendingRetryRequest: SpeechOutputRequest? = null
 
     init {
-        tts = TextToSpeech(context) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                val result = tts?.setLanguage(Locale.US)
-                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Log.e(TAG, "Language not supported, trying default locale")
-                    tts?.setLanguage(Locale.getDefault())
-                }
-                // Slightly slower speech rate for dementia-friendly output
-                tts?.setSpeechRate(0.85f)
-                tts?.setPitch(1.0f)
-                isReady = true
-
-                tts?.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
-                    override fun onStart(utteranceId: String?) { onStart() }
-                    override fun onDone(utteranceId: String?) { onDone() }
-                    @Deprecated("Deprecated in Java")
-                    override fun onError(utteranceId: String?) { onDone() }
-                })
-                Log.d(TAG, "TTS ready")
-            } else {
-                Log.e(TAG, "TTS init failed: $status")
-            }
-        }
+        initializeEngine()
     }
 
-    fun speak(text: String, flush: Boolean = true) {
-        if (!isReady) {
-            Log.w(TAG, "TTS not ready, dropping: $text")
-            return
-        }
-        val queueMode = if (flush) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD
-        tts?.speak(text, queueMode, null, "snapknow_${System.currentTimeMillis()}")
-        Log.d(TAG, "Speaking: '$text'")
+    fun speak(text: String, flush: Boolean = true): Boolean {
+        return speak(SpeechOutputRequest(text = text, flush = flush))
     }
 
-    fun stop() { tts?.stop() }
+    fun speak(request: SpeechOutputRequest): Boolean {
+        val currentEngine = engine
+        val started = currentEngine.speak(request)
+        if (!started) {
+            Log.w(TAG, "Speech request rejected by ${currentEngine.backend}: ${request.text}")
+        }
+        return started
+    }
+
+    fun stop() {
+        engine.stop()
+        updateState { copy(isSpeaking = false) }
+    }
 
     fun shutdown() {
-        tts?.stop()
-        tts?.shutdown()
-        tts = null
-        isReady = false
+        engine.shutdown()
+        updateState { copy(isReady = false, isSpeaking = false) }
     }
 
-    val ready: Boolean get() = isReady
+    val ready: Boolean
+        get() = state.value.isReady
+
+    private fun initializeEngine() {
+        engine.initialize(object : SpeechOutputEngine.Listener {
+            override fun onReady() {
+                updateState {
+                    copy(
+                        activeBackend = engine.backend,
+                        isReady = true,
+                        status = engine.statusMessage(),
+                        lastError = null
+                    )
+                }
+                pendingRetryRequest?.let { request ->
+                    pendingRetryRequest = null
+                    engine.speak(request)
+                }
+            }
+
+            override fun onStart(request: SpeechOutputRequest) {
+                updateState {
+                    copy(
+                        activeBackend = engine.backend,
+                        isSpeaking = true,
+                        status = "Speaking via ${engine.backend.name.lowercase().replace('_', ' ')}"
+                    )
+                }
+                onStart()
+            }
+
+            override fun onDone(request: SpeechOutputRequest) {
+                updateState {
+                    copy(
+                        activeBackend = engine.backend,
+                        isSpeaking = false,
+                        status = engine.statusMessage()
+                    )
+                }
+                onDone()
+            }
+
+            override fun onError(request: SpeechOutputRequest?, message: String) {
+                Log.w(TAG, message)
+                val previousBackend = engine.backend
+                if (previousBackend == SpeechBackend.PIPER &&
+                    state.value.preferredBackend == SpeechBackendPreference.PIPER_WITH_ANDROID_FALLBACK
+                ) {
+                    pendingRetryRequest = request
+                    fallbackToAndroid(message)
+                    return
+                }
+
+                updateState {
+                    copy(
+                        activeBackend = engine.backend,
+                        isReady = engine.isReady(),
+                        isSpeaking = false,
+                        status = engine.statusMessage(),
+                        lastError = message
+                    )
+                }
+                onError(message)
+                onDone()
+            }
+        })
+    }
+
+    private fun fallbackToAndroid(reason: String) {
+        engine.shutdown()
+        engine = AndroidSpeechOutputEngine(appContext)
+        updateState {
+            copy(
+                activeBackend = engine.backend,
+                isReady = false,
+                isSpeaking = false,
+                status = "Falling back to Android speech output",
+                lastError = reason
+            )
+        }
+        initializeEngine()
+    }
+
+    private fun selectEngine(preferredBackend: SpeechBackendPreference): SpeechOutputEngine {
+        return when (preferredBackend) {
+            SpeechBackendPreference.PIPER_WITH_ANDROID_FALLBACK -> PiperSpeechOutputEngine(appContext)
+            SpeechBackendPreference.ANDROID_SYSTEM_ONLY -> AndroidSpeechOutputEngine(appContext)
+        }
+    }
+
+    private fun updateState(transform: SpeechOutputState.() -> SpeechOutputState) {
+        _state.value = _state.value.transform()
+    }
 }
