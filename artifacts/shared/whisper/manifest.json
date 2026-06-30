@@ -1,0 +1,22 @@
+{
+  "modelId": "speech_to_text",
+  "displayName": "Whisper tiny",
+  "recommendedFormat": "pte",
+  "artifacts": [
+    {
+      "path": "artifacts/shared/whisper/whisper_encoder.pte",
+      "role": "encoder",
+      "backend": "xnnpack",
+      "status": "planned"
+    },
+    {
+      "path": "artifacts/shared/whisper/whisper_decoder.pte",
+      "role": "decoder",
+      "backend": "xnnpack",
+      "status": "planned"
+    }
+  ],
+  "notes": [
+    "Whisper should be exported as staged ExecuTorch artifacts rather than left as a raw training checkpoint."
+  ]
+}
