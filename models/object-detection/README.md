@@ -14,7 +14,7 @@ today.
 
 ## Current artifact view
 
-- `current/artifact_status.json`
+- `artifact_status.json`
 - `app/src/main/assets/fssd_25_8bit_v2.tflite`
 - `artifacts/object-detection/manifest.json`
 

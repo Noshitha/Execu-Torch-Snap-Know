@@ -24,11 +24,11 @@ Use this folder to answer:
   Central machine-readable summary of readiness by model family.
 - `models/<family>/README.md`
   Short human-readable explanation of the current model direction.
-- `models/<family>/ON_DEVICE_PLAN.md`
-  The recommended artifact path and next export milestones.
-- `models/<family>/current/artifact_status.json`
-  Branch-aware audit record for what is present, what is missing, and which
-  files are the current source of truth.
+- `models/<family>/artifact_status.json`
+  Audit record for what is present, what is missing, and which files are the
+  current source of truth.
+- `models/<family>/*.txt`
+  Small plain-text status notes kept directly in the model folder.
 
 The real deployment files still live under `app/src/main/assets/` and
 `artifacts/`. This folder organizes them by function so they are easier to

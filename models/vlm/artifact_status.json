@@ -2,10 +2,6 @@
   "modelFamily": "vlm",
   "readiness": "manifest-only",
   "auditedFromBranch": "origin/main",
-  "sourceBranch": {
-    "name": "codex/model-vlm",
-    "commit": "c154c78"
-  },
   "summary": "The VLM path has a manifest and bundle contract, but none of the executable model artifacts are present yet.",
   "actualFiles": [
     {

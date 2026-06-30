@@ -19,7 +19,7 @@ artifact we want to use as the shared Android/macOS direction.
 
 ## Current artifact view
 
-- `current/artifact_status.json`
+- `artifact_status.json`
 - `artifacts/android/face-embedding/manifest.json`
 - `artifacts/macos/face-embedding/manifest.json`
 

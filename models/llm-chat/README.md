@@ -23,7 +23,7 @@ because it affects:
 
 ## Current artifact view
 
-- `current/artifact_status.json`
+- `artifact_status.json`
 - `artifacts/shared/llm-chat/manifest.json`
 
 ## Next step

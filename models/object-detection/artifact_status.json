@@ -2,10 +2,6 @@
   "modelFamily": "object-detection",
   "readiness": "artifact-ready",
   "auditedFromBranch": "origin/main",
-  "sourceBranch": {
-    "name": "codex/model-object-detection",
-    "commit": "a862eb7"
-  },
   "summary": "The detector is already present in a mobile-ready TFLite format and has a matching artifact manifest.",
   "actualFiles": [
     {

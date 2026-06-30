@@ -2,10 +2,6 @@
   "modelFamily": "face-embedding",
   "readiness": "legacy-artifact-present",
   "auditedFromBranch": "origin/main",
-  "sourceBranch": {
-    "name": "codex/model-face-embedding",
-    "commit": "8606d09"
-  },
   "summary": "A large TorchScript artifact exists today, but the portable ExecuTorch .pte exports are still missing.",
   "actualFiles": [
     {

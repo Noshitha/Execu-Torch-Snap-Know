@@ -14,7 +14,9 @@ The repo now has a real artifact contract:
 - `app/src/main/assets/speech/manifest.json`
 - staging instructions under `app/src/main/assets/speech/stt/whisper-tiny/`
 
-The actual Whisper runtime artifacts are still missing.
+The shared artifact contract exists, and app-side Whisper assets/runtime work
+now exists elsewhere in the repo. This folder stays focused on model-family
+status rather than duplicating the runtime files.
 
 ## Expected artifacts
 
@@ -23,7 +25,7 @@ The actual Whisper runtime artifacts are still missing.
 
 ## Current artifact view
 
-- `current/artifact_status.json`
+- `artifact_status.json`
 - `artifacts/shared/whisper/manifest.json`
 - `app/src/main/assets/speech/manifest.json`
 

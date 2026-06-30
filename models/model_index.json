@@ -7,10 +7,6 @@
       "displayName": "Face Embedding",
       "status": "legacy-artifact-present",
       "recommendedModel": "Normalize the face embedding export to portable ExecuTorch .pte outputs",
-      "sourceBranch": {
-        "name": "codex/model-face-embedding",
-        "commit": "8606d09"
-      },
       "currentArtifacts": [
         {
           "format": "torchscript",
@@ -19,7 +15,7 @@
         },
         {
           "format": "json",
-          "path": "models/face-embedding/current/artifact_status.json",
+          "path": "models/face-embedding/artifact_status.json",
           "exists": true
         },
         {
@@ -39,10 +35,6 @@
       "displayName": "Object Detection",
       "status": "artifact-ready",
       "recommendedModel": "FSSD 25 8-bit in TensorFlow Lite form",
-      "sourceBranch": {
-        "name": "codex/model-object-detection",
-        "commit": "a862eb7"
-      },
       "currentArtifacts": [
         {
           "format": "tflite",
@@ -51,7 +43,7 @@
         },
         {
           "format": "json",
-          "path": "models/object-detection/current/artifact_status.json",
+          "path": "models/object-detection/artifact_status.json",
           "exists": true
         },
         {
@@ -70,14 +62,10 @@
       "displayName": "STT (Whisper)",
       "status": "contract-defined",
       "recommendedModel": "Whisper tiny with staged encoder/decoder ExecuTorch artifacts",
-      "sourceBranch": {
-        "name": "codex/model-stt-whisper",
-        "commit": "c19a55e"
-      },
       "currentArtifacts": [
         {
           "format": "json",
-          "path": "models/stt-whisper/current/artifact_status.json",
+          "path": "models/stt-whisper/artifact_status.json",
           "exists": true
         },
         {
@@ -102,14 +90,10 @@
       "displayName": "TTS (Piper)",
       "status": "contract-defined",
       "recommendedModel": "Piper en_US-lessac-medium voice package in ONNX form",
-      "sourceBranch": {
-        "name": "codex/model-tts-piper",
-        "commit": "0eb5593"
-      },
       "currentArtifacts": [
         {
           "format": "json",
-          "path": "models/tts-piper/current/artifact_status.json",
+          "path": "models/tts-piper/artifact_status.json",
           "exists": true
         },
         {
@@ -134,14 +118,10 @@
       "displayName": "Vision Language Model",
       "status": "manifest-only",
       "recommendedModel": "SmolVLM staged bundle with separate encoder, projector, decoder, and tokenizer files",
-      "sourceBranch": {
-        "name": "codex/model-vlm",
-        "commit": "c154c78"
-      },
       "currentArtifacts": [
         {
           "format": "json",
-          "path": "models/vlm/current/artifact_status.json",
+          "path": "models/vlm/artifact_status.json",
           "exists": true
         },
         {
@@ -168,14 +148,10 @@
       "displayName": "LLM Chat",
       "status": "planned-contract",
       "recommendedModel": "SmolLM2-360M-Instruct or another small instruction model after the rest of the stack stabilizes",
-      "sourceBranch": {
-        "name": "codex/model-llm-chat",
-        "commit": "47fc93f"
-      },
       "currentArtifacts": [
         {
           "format": "json",
-          "path": "models/llm-chat/current/artifact_status.json",
+          "path": "models/llm-chat/artifact_status.json",
           "exists": true
         },
         {

@@ -2,10 +2,6 @@
   "modelFamily": "llm-chat",
   "readiness": "planned-contract",
   "auditedFromBranch": "origin/main",
-  "sourceBranch": {
-    "name": "codex/model-llm-chat",
-    "commit": "47fc93f"
-  },
   "summary": "The chat LLM track has a recommended model and artifact contract, but no committed weights or tokenizer bundle yet.",
   "actualFiles": [
     {

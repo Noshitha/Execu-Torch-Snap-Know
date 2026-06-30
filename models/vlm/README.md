@@ -20,7 +20,7 @@ not the complete runnable VLM stack.
 
 ## Current artifact view
 
-- `current/artifact_status.json`
+- `artifact_status.json`
 - `app/src/main/assets/vlm/smolvlm_manifest.json`
 - `artifacts/shared/vlm/manifest.json`
 

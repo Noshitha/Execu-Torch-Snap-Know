@@ -1,0 +1,43 @@
+{
+  "modelFamily": "tts-piper",
+  "readiness": "contract-defined",
+  "auditedFromBranch": "origin/main",
+  "summary": "Piper has a correct ONNX-based artifact contract and the app-side lessac voice package is now bundled in the repo.",
+  "actualFiles": [
+    {
+      "path": "artifacts/shared/piper/manifest.json",
+      "type": "json",
+      "exists": true,
+      "role": "artifact contract"
+    },
+    {
+      "path": "app/src/main/assets/speech/manifest.json",
+      "type": "json",
+      "exists": true,
+      "role": "runtime asset contract"
+    },
+    {
+      "path": "app/src/main/assets/speech/tts/piper/en_US-lessac-medium/README.txt",
+      "type": "text",
+      "exists": true,
+      "role": "staging instructions"
+    },
+    {
+      "path": "app/src/main/assets/speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx",
+      "type": "onnx",
+      "exists": true,
+      "role": "bundled voice model"
+    },
+    {
+      "path": "app/src/main/assets/speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx.json",
+      "type": "json",
+      "exists": true,
+      "role": "bundled voice config"
+    }
+  ],
+  "missingArtifacts": [
+    "artifacts/shared/piper/en_US-lessac-medium.onnx",
+    "artifacts/shared/piper/en_US-lessac-medium.onnx.json"
+  ],
+  "nextArtifactMilestone": "Normalize the shared Piper artifact bundle so it mirrors the bundled app-side voice package."
+}
