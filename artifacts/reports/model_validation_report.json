@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-06-29T22:08:13.916622+00:00",
+  "generatedAt": "2026-06-30T18:11:50.116042+00:00",
   "summary": {
-    "totalArtifacts": 9,
-    "presentArtifacts": 3,
+    "totalArtifacts": 11,
+    "presentArtifacts": 4,
     "missingRequiredArtifacts": 1,
-    "modelsCovered": 5
+    "modelsCovered": 6
   },
   "models": [
     {
@@ -199,6 +199,48 @@
           "required": false,
           "notes": "Manifest exists, but full decoder/tokenizer artifacts are not yet bundled.",
           "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "llm_chat",
+      "displayName": "LLM Chat",
+      "purpose": "Small on-device conversational follow-up model",
+      "status": "planned",
+      "artifacts": [
+        {
+          "artifactId": "llm_chat_manifest",
+          "path": "artifacts/shared/llm-chat/manifest.json",
+          "exists": true,
+          "sizeBytes": 599,
+          "format": "json",
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "required": false,
+          "notes": "Model direction and asset contract only; no decoder weights are present yet.",
+          "warnings": []
+        },
+        {
+          "artifactId": "llm_chat_decoder_pte",
+          "path": "artifacts/shared/llm-chat/decoder.pte",
+          "exists": false,
+          "sizeBytes": null,
+          "format": "pte",
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "required": false,
+          "notes": "Future decoder export target after the rest of the model stack stabilizes.",
+          "warnings": [
+            "ExecuTorch artifact missing; export step has not completed."
+          ]
         }
       ]
     }

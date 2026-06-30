@@ -18,7 +18,9 @@ artifact.
 
 ## Current artifact view
 
-- `current/README.txt`
+- `current/artifact_status.json`
+- `artifacts/shared/piper/manifest.json`
+- `app/src/main/assets/speech/manifest.json`
 
 ## Next step
 

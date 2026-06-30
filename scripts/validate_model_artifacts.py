@@ -263,6 +263,10 @@ def render_html(report: dict[str, Any]) -> str:
 """
 
 
+def strip_trailing_whitespace(text: str) -> str:
+    return "\n".join(line.rstrip() for line in text.splitlines()) + "\n"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate SnapKnow model artifacts.")
     parser.add_argument("--model-set", default=str(DEFAULT_MODEL_SET))
@@ -284,7 +288,7 @@ def main() -> int:
 
     report_json_path.parent.mkdir(parents=True, exist_ok=True)
     report_json_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    report_html_path.write_text(render_html(report), encoding="utf-8")
+    report_html_path.write_text(strip_trailing_whitespace(render_html(report)), encoding="utf-8")
 
     print(f"Wrote JSON report: {report_json_path}")
     print(f"Wrote HTML report: {report_html_path}")

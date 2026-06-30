@@ -8,8 +8,13 @@
 
 ## What exists today
 
-The repo contains export scripts and placeholder asset docs, but not the actual
-Whisper runtime artifacts in this branch yet.
+The repo now has a real artifact contract:
+
+- `artifacts/shared/whisper/manifest.json`
+- `app/src/main/assets/speech/manifest.json`
+- staging instructions under `app/src/main/assets/speech/stt/whisper-tiny/`
+
+The actual Whisper runtime artifacts are still missing.
 
 ## Expected artifacts
 
@@ -18,7 +23,9 @@ Whisper runtime artifacts in this branch yet.
 
 ## Current artifact view
 
-- `current/README.txt`
+- `current/artifact_status.json`
+- `artifacts/shared/whisper/manifest.json`
+- `app/src/main/assets/speech/manifest.json`
 
 ## Next step
 

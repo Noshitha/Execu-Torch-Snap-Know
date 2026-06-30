@@ -21,6 +21,11 @@ because it affects:
 - tokenizer files
 - generation/runtime config
 
+## Current artifact view
+
+- `current/artifact_status.json`
+- `artifacts/shared/llm-chat/manifest.json`
+
 ## Next step
 
 Choose a small on-device instruction/chat model once face embedding, object

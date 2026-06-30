@@ -1,101 +1,194 @@
 {
-  "version": 1,
+  "version": 2,
+  "auditedFrom": "origin/main",
   "modelFamilies": [
-    {
-      "id": "object-detection",
-      "displayName": "Object Detection",
-      "status": "present",
-      "recommendedModel": "FSSD 25 8-bit",
-      "currentArtifacts": [
-        {
-          "format": "tflite",
-          "path": "models/object-detection/current/fssd_25_8bit_v2.tflite"
-        }
-      ],
-      "nextStep": "Validate accuracy and latency on device; optionally re-export to ExecuTorch later."
-    },
     {
       "id": "face-embedding",
       "displayName": "Face Embedding",
-      "status": "partial",
-      "recommendedModel": "InceptionResnetV1 embedding path today; portable ExecuTorch export still needed",
+      "status": "legacy-artifact-present",
+      "recommendedModel": "Normalize the face embedding export to portable ExecuTorch .pte outputs",
+      "sourceBranch": {
+        "name": "codex/model-face-embedding",
+        "commit": "8606d09"
+      },
       "currentArtifacts": [
         {
-          "format": "pt",
-          "path": "models/face-embedding/current/face_embedding.pt"
+          "format": "torchscript",
+          "path": "app/src/main/assets/face_embedding.pt",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "models/face-embedding/current/artifact_status.json",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "artifacts/android/face-embedding/manifest.json",
+          "exists": true
         }
       ],
       "expectedArtifacts": [
-        "face_embedding_xnnpack.pte",
-        "face_embedding_qnn.pte"
+        "artifacts/android/face_embedding_xnnpack.pte",
+        "artifacts/android/face_embedding_qnn.pte"
       ],
-      "nextStep": "Export a portable .pte for Android and macOS."
+      "nextStep": "Export the portable XNNPACK .pte first, then add the QNN-optimized Android variant."
+    },
+    {
+      "id": "object-detection",
+      "displayName": "Object Detection",
+      "status": "artifact-ready",
+      "recommendedModel": "FSSD 25 8-bit in TensorFlow Lite form",
+      "sourceBranch": {
+        "name": "codex/model-object-detection",
+        "commit": "a862eb7"
+      },
+      "currentArtifacts": [
+        {
+          "format": "tflite",
+          "path": "app/src/main/assets/fssd_25_8bit_v2.tflite",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "models/object-detection/current/artifact_status.json",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "artifacts/object-detection/manifest.json",
+          "exists": true
+        }
+      ],
+      "expectedArtifacts": [
+        "app/src/main/assets/fssd_25_8bit_v2.tflite"
+      ],
+      "nextStep": "Keep the TFLite detector stable and benchmark it before considering any ExecuTorch re-export."
     },
     {
       "id": "stt-whisper",
       "displayName": "STT (Whisper)",
-      "status": "placeholder",
-      "recommendedModel": "Whisper tiny",
+      "status": "contract-defined",
+      "recommendedModel": "Whisper tiny with staged encoder/decoder ExecuTorch artifacts",
+      "sourceBranch": {
+        "name": "codex/model-stt-whisper",
+        "commit": "c19a55e"
+      },
       "currentArtifacts": [
         {
-          "format": "placeholder",
-          "path": "models/stt-whisper/current/README.txt"
+          "format": "json",
+          "path": "models/stt-whisper/current/artifact_status.json",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "artifacts/shared/whisper/manifest.json",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "app/src/main/assets/speech/manifest.json",
+          "exists": true
         }
       ],
       "expectedArtifacts": [
-        "whisper_encoder.pte",
-        "whisper_decoder.pte"
+        "artifacts/shared/whisper/whisper_encoder.pte",
+        "artifacts/shared/whisper/whisper_decoder.pte"
       ],
-      "nextStep": "Export encoder/decoder artifacts and build runtime audio pipeline."
+      "nextStep": "Produce and smoke-test the Whisper encoder/decoder artifact pair off-device."
     },
     {
       "id": "tts-piper",
       "displayName": "TTS (Piper)",
-      "status": "placeholder",
-      "recommendedModel": "Piper en_US-lessac-medium",
+      "status": "contract-defined",
+      "recommendedModel": "Piper en_US-lessac-medium voice package in ONNX form",
+      "sourceBranch": {
+        "name": "codex/model-tts-piper",
+        "commit": "0eb5593"
+      },
       "currentArtifacts": [
         {
-          "format": "placeholder",
-          "path": "models/tts-piper/current/README.txt"
+          "format": "json",
+          "path": "models/tts-piper/current/artifact_status.json",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "artifacts/shared/piper/manifest.json",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "app/src/main/assets/speech/manifest.json",
+          "exists": true
         }
       ],
       "expectedArtifacts": [
-        "en_US-lessac-medium.onnx",
-        "en_US-lessac-medium.onnx.json"
+        "artifacts/shared/piper/en_US-lessac-medium.onnx",
+        "artifacts/shared/piper/en_US-lessac-medium.onnx.json"
       ],
-      "nextStep": "Stage Piper ONNX voice assets and integrate runtime."
+      "nextStep": "Stage the real Piper ONNX voice package and keep it out of the .pte export path."
     },
     {
       "id": "vlm",
       "displayName": "Vision Language Model",
       "status": "manifest-only",
-      "recommendedModel": "SmolVLM staged path",
+      "recommendedModel": "SmolVLM staged bundle with separate encoder, projector, decoder, and tokenizer files",
+      "sourceBranch": {
+        "name": "codex/model-vlm",
+        "commit": "c154c78"
+      },
       "currentArtifacts": [
         {
           "format": "json",
-          "path": "models/vlm/current/smolvlm_manifest.json"
+          "path": "models/vlm/current/artifact_status.json",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "app/src/main/assets/vlm/smolvlm_manifest.json",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "artifacts/shared/vlm/manifest.json",
+          "exists": true
         }
       ],
       "expectedArtifacts": [
-        "vision_encoder.pte",
-        "projector.pte",
-        "text_decoder.pte",
-        "tokenizer.json"
+        "artifacts/shared/vlm/vision_encoder.pte",
+        "artifacts/shared/vlm/projector.pte",
+        "artifacts/shared/vlm/decoder.pte",
+        "artifacts/shared/vlm/tokenizer"
       ],
-      "nextStep": "Bundle the full VLM artifact set and wire generation."
+      "nextStep": "Export and validate the real VLM bundle off-device before promising scene QA."
     },
     {
       "id": "llm-chat",
       "displayName": "LLM Chat",
-      "status": "placeholder",
-      "recommendedModel": "Choose after artifact pipeline is stable; small on-device instruction model",
-      "currentArtifacts": [],
-      "expectedArtifacts": [
-        "tokenizer files",
-        "chat model weights",
-        "runtime export or portable format"
+      "status": "planned-contract",
+      "recommendedModel": "SmolLM2-360M-Instruct or another small instruction model after the rest of the stack stabilizes",
+      "sourceBranch": {
+        "name": "codex/model-llm-chat",
+        "commit": "47fc93f"
+      },
+      "currentArtifacts": [
+        {
+          "format": "json",
+          "path": "models/llm-chat/current/artifact_status.json",
+          "exists": true
+        },
+        {
+          "format": "json",
+          "path": "artifacts/shared/llm-chat/manifest.json",
+          "exists": true
+        }
       ],
-      "nextStep": "Select a small chat model after face/object/STT/TTS artifacts are stabilized."
+      "expectedArtifacts": [
+        "artifacts/shared/llm-chat/decoder.pte",
+        "artifacts/shared/llm-chat/tokenizer"
+      ],
+      "nextStep": "Lock the exact chat checkpoint only after face, object, Whisper, and Piper artifact work is stable."
     }
   ]
 }

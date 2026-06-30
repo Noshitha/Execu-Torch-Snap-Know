@@ -18,6 +18,14 @@ Android or macOS deployment work begins.
 - `reports/`
   Generated validation reports for off-device review.
 
+## Audit Files
+
+- `reports/model_validation_report.json`
+- `reports/model_validation_report.html`
+
+These reports are generated from `model_set.json` and should match the
+structured status files under `models/*/current/artifact_status.json`.
+
 ## Current Rule
 
 Before wiring any runtime integration:

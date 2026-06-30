@@ -1,0 +1,23 @@
+{
+  "modelFamily": "llm-chat",
+  "readiness": "planned-contract",
+  "auditedFromBranch": "origin/main",
+  "sourceBranch": {
+    "name": "codex/model-llm-chat",
+    "commit": "47fc93f"
+  },
+  "summary": "The chat LLM track has a recommended model and artifact contract, but no committed weights or tokenizer bundle yet.",
+  "actualFiles": [
+    {
+      "path": "artifacts/shared/llm-chat/manifest.json",
+      "type": "json",
+      "exists": true,
+      "role": "artifact contract"
+    }
+  ],
+  "missingArtifacts": [
+    "artifacts/shared/llm-chat/decoder.pte",
+    "artifacts/shared/llm-chat/tokenizer"
+  ],
+  "nextArtifactMilestone": "Lock the exact chat checkpoint after the core perception and speech artifact tracks are stable."
+}

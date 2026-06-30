@@ -1,0 +1,41 @@
+{
+  "modelFamily": "vlm",
+  "readiness": "manifest-only",
+  "auditedFromBranch": "origin/main",
+  "sourceBranch": {
+    "name": "codex/model-vlm",
+    "commit": "c154c78"
+  },
+  "summary": "The VLM path has a manifest and bundle contract, but none of the executable model artifacts are present yet.",
+  "actualFiles": [
+    {
+      "path": "app/src/main/assets/vlm/smolvlm_manifest.json",
+      "type": "json",
+      "exists": true,
+      "sizeBytes": 1259,
+      "role": "runtime bundle manifest"
+    },
+    {
+      "path": "artifacts/shared/vlm/manifest.json",
+      "type": "json",
+      "exists": true,
+      "role": "artifact contract"
+    },
+    {
+      "path": "app/src/main/assets/vlm/PUT_SMOLVLM_ASSETS_HERE.txt",
+      "type": "text",
+      "exists": true,
+      "role": "staging instructions"
+    }
+  ],
+  "missingArtifacts": [
+    "artifacts/shared/vlm/vision_encoder.pte",
+    "artifacts/shared/vlm/projector.pte",
+    "artifacts/shared/vlm/decoder.pte",
+    "artifacts/shared/vlm/tokenizer",
+    "app/src/main/assets/vlm/smolvlm/vision_encoder.pte",
+    "app/src/main/assets/vlm/smolvlm/projector.pte",
+    "app/src/main/assets/vlm/smolvlm/text_decoder.pte"
+  ],
+  "nextArtifactMilestone": "Export the staged SmolVLM bundle and validate a desktop smoke test before any mobile claims."
+}

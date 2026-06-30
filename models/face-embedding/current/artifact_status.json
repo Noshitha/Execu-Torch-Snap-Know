@@ -1,0 +1,36 @@
+{
+  "modelFamily": "face-embedding",
+  "readiness": "legacy-artifact-present",
+  "auditedFromBranch": "origin/main",
+  "sourceBranch": {
+    "name": "codex/model-face-embedding",
+    "commit": "8606d09"
+  },
+  "summary": "A large TorchScript artifact exists today, but the portable ExecuTorch .pte exports are still missing.",
+  "actualFiles": [
+    {
+      "path": "app/src/main/assets/face_embedding.pt",
+      "type": "torchscript",
+      "exists": true,
+      "sizeBytes": 91252437,
+      "role": "legacy Android fallback"
+    },
+    {
+      "path": "artifacts/android/face-embedding/manifest.json",
+      "type": "json",
+      "exists": true,
+      "role": "Android artifact contract"
+    },
+    {
+      "path": "artifacts/macos/face-embedding/manifest.json",
+      "type": "json",
+      "exists": true,
+      "role": "macOS artifact contract"
+    }
+  ],
+  "missingArtifacts": [
+    "artifacts/android/face_embedding_xnnpack.pte",
+    "artifacts/android/face_embedding_qnn.pte"
+  ],
+  "nextArtifactMilestone": "Export face_embedding_xnnpack.pte and validate it off-device before device integration."
+}

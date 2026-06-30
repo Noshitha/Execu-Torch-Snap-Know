@@ -1,0 +1,27 @@
+{
+  "modelFamily": "object-detection",
+  "readiness": "artifact-ready",
+  "auditedFromBranch": "origin/main",
+  "sourceBranch": {
+    "name": "codex/model-object-detection",
+    "commit": "a862eb7"
+  },
+  "summary": "The detector is already present in a mobile-ready TFLite format and has a matching artifact manifest.",
+  "actualFiles": [
+    {
+      "path": "app/src/main/assets/fssd_25_8bit_v2.tflite",
+      "type": "tflite",
+      "exists": true,
+      "sizeBytes": 232096,
+      "role": "primary detector artifact"
+    },
+    {
+      "path": "artifacts/object-detection/manifest.json",
+      "type": "json",
+      "exists": true,
+      "role": "artifact contract"
+    }
+  ],
+  "missingArtifacts": [],
+  "nextArtifactMilestone": "Keep the TFLite path stable and benchmark latency and label semantics."
+}
