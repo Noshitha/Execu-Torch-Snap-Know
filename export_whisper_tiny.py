@@ -18,6 +18,7 @@ Output files
 ------------
     whisper_encoder.pte   — mel spectrogram → audio features
     whisper_decoder.pte   — audio features → token logits
+    tokenizer.json        — stage separately from the Whisper model repo for decoding
 """
 
 import argparse

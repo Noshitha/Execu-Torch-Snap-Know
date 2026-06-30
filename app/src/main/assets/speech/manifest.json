@@ -6,9 +6,13 @@
       "assetDir": "speech/stt/whisper-tiny",
       "requiredFiles": [
         "speech/stt/whisper-tiny/whisper_encoder.pte",
-        "speech/stt/whisper-tiny/whisper_decoder.pte"
+        "speech/stt/whisper-tiny/whisper_decoder.pte",
+        "speech/stt/whisper-tiny/tokenizer.json"
       ],
-      "nativeLibrary": "libsnapknow_whisper_runtime.so"
+      "optionalFiles": [
+        "speech/stt/whisper-tiny/whisper_manifest.json"
+      ],
+      "nativeLibrary": "libsnapknow_jni.so"
     }
   },
   "tts": {

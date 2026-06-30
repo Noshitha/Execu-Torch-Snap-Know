@@ -8,12 +8,16 @@ class VoiceRecognitionManager(
     onStateChanged: (SpeechTranscriberState) -> Unit = {}
 ) {
     private val delegates: List<SpeechTranscriber> = listOf(
-        AndroidSpeechTranscriber(
+        WhisperSpeechTranscriber(
             context = context,
             onResult = SpeechTranscriberResultListener(onResult),
             onStateChanged = SpeechTranscriberStateListener(onStateChanged)
         ),
-        WhisperSpeechTranscriber(context)
+        AndroidSpeechTranscriber(
+            context = context,
+            onResult = SpeechTranscriberResultListener(onResult),
+            onStateChanged = SpeechTranscriberStateListener(onStateChanged)
+        )
     )
 
     private val activeTranscriber: SpeechTranscriber =

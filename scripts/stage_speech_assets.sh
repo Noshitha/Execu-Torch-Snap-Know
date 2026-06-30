@@ -9,6 +9,7 @@ PIPER_DIR="$REPO_ROOT/app/src/main/assets/speech/tts/piper/en_US-lessac-medium"
 
 WHISPER_ENCODER=""
 WHISPER_DECODER=""
+WHISPER_TOKENIZER=""
 PIPER_MODEL=""
 PIPER_CONFIG=""
 
@@ -18,6 +19,7 @@ Usage:
   bash scripts/stage_speech_assets.sh \
     [--whisper-encoder /path/to/whisper_encoder.pte] \
     [--whisper-decoder /path/to/whisper_decoder.pte] \
+    [--whisper-tokenizer /path/to/tokenizer.json] \
     [--piper-model /path/to/en_US-lessac-medium.onnx] \
     [--piper-config /path/to/en_US-lessac-medium.onnx.json]
 
@@ -41,6 +43,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --whisper-decoder)
             WHISPER_DECODER="$2"
+            shift 2
+            ;;
+        --whisper-tokenizer)
+            WHISPER_TOKENIZER="$2"
             shift 2
             ;;
         --piper-model)
@@ -71,6 +77,10 @@ fi
 
 if [[ -n "$WHISPER_DECODER" ]]; then
     copy_asset "$WHISPER_DECODER" "$WHISPER_DIR/whisper_decoder.pte"
+fi
+
+if [[ -n "$WHISPER_TOKENIZER" ]]; then
+    copy_asset "$WHISPER_TOKENIZER" "$WHISPER_DIR/tokenizer.json"
 fi
 
 if [[ -n "$PIPER_MODEL" ]]; then

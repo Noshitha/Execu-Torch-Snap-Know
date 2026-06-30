@@ -107,6 +107,7 @@ class ExecuTorchModule private constructor(modelPath: String) : AutoCloseable {
                 val dest = File(context.filesDir, name)
                 dest.parentFile?.mkdirs()
                 if (!dest.exists()) {
+                    dest.parentFile?.mkdirs()
                     context.assets.open(name).use { src ->
                         FileOutputStream(dest).use { dst -> src.copyTo(dst) }
                     }

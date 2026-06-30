@@ -32,19 +32,54 @@ data class SpeechRuntimeBridgeState(
     }
 }
 
+data class WhisperTinyAssetConfig(
+    val encoderAssetPath: String = "speech/stt/whisper-tiny/whisper_encoder.pte",
+    val decoderAssetPath: String = "speech/stt/whisper-tiny/whisper_decoder.pte",
+    val tokenizerAssetPath: String = "speech/stt/whisper-tiny/tokenizer.json",
+    val manifestAssetPath: String = "speech/stt/whisper-tiny/whisper_manifest.json",
+    val encoderOutputShape: LongArray = longArrayOf(1, 1500, 384),
+    val sampleRateHz: Int = 16_000,
+    val maxAudioSeconds: Int = 30,
+    val melBins: Int = 80,
+    val maxDecoderTokens: Int = 128,
+    val decoderStartTokenId: Long = 50_258L,
+    val eosTokenId: Long = 50_257L
+)
+
 class SpeechAssetBridge(
     private val context: Context
 ) {
     fun prepareWhisperTiny(): SpeechRuntimeBridgeState {
+        val config = whisperTinyConfig()
         val requiredAssets = listOf(
-            WHISPER_ASSET_DIR.resolve("whisper_encoder.pte").path,
-            WHISPER_ASSET_DIR.resolve("whisper_decoder.pte").path
+            config.encoderAssetPath,
+            config.decoderAssetPath,
+            config.tokenizerAssetPath
         )
         return prepareBundle(
             bundleLabel = "Whisper tiny",
             assetPaths = requiredAssets,
-            backendLibraryName = "libsnapknow_whisper_runtime.so"
+            backendLibraryName = "libsnapknow_jni.so"
         )
+    }
+
+    fun whisperTinyConfig(): WhisperTinyAssetConfig {
+        val defaultConfig = WhisperTinyAssetConfig()
+        if (!assetExists(defaultConfig.manifestAssetPath)) {
+            return defaultConfig
+        }
+
+        return runCatching {
+            val manifestJson = context.assets.open(defaultConfig.manifestAssetPath).bufferedReader().use { it.readText() }
+            val manifest = org.json.JSONObject(manifestJson)
+            val decoderMaxCacheLen = manifest.optInt(
+                "decoder_max_cache_len",
+                defaultConfig.maxDecoderTokens
+            )
+            defaultConfig.copy(maxDecoderTokens = decoderMaxCacheLen)
+        }.getOrElse {
+            defaultConfig
+        }
     }
 
     fun preparePiper(config: PiperVoiceConfig = PiperVoiceConfig()): SpeechRuntimeBridgeState {
