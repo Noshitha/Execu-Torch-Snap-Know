@@ -1,0 +1,23 @@
+{
+  "modelId": "llm_chat",
+  "displayName": "Small Chat LLM",
+  "recommendedModel": "SmolLM2-360M-Instruct",
+  "recommendedFormat": "pte",
+  "artifacts": [
+    {
+      "path": "artifacts/shared/llm-chat/decoder.pte",
+      "role": "decoder",
+      "backend": "xnnpack",
+      "status": "planned"
+    },
+    {
+      "path": "artifacts/shared/llm-chat/tokenizer",
+      "role": "tokenizer-assets",
+      "backend": "host",
+      "status": "planned"
+    }
+  ],
+  "notes": [
+    "A small instruction-tuned LLM is more realistic for on-device follow-up chat than reusing the VLM decoder directly."
+  ]
+}
