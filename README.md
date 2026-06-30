@@ -1,4 +1,4 @@
-# SnapKnow
+# SnapOn
 
 SnapKnow is an on-device memory assistant designed to help dementia patients
 remember people, objects, and context using vision and voice, while keeping
