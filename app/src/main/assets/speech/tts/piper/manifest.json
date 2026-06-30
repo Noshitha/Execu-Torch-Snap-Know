@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "voiceId": "en_US-lessac-medium",
+  "assetDir": "speech/tts/piper/en_US-lessac-medium",
+  "requiredFiles": [
+    "speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx",
+    "speech/tts/piper/en_US-lessac-medium/en_US-lessac-medium.onnx.json"
+  ],
+  "nativeLibrary": "libsnapknow_piper_runtime.so",
+  "sampleRateHz": 22050,
+  "notes": "SnapKnow Piper asset contract for staged Android TTS packaging."
+}
