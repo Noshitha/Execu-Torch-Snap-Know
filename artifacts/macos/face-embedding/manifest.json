@@ -1,0 +1,17 @@
+{
+  "modelId": "face_embedding",
+  "displayName": "Face Embedding",
+  "recommendedFormat": "pte",
+  "platform": "macos",
+  "artifacts": [
+    {
+      "path": "artifacts/android/face_embedding_xnnpack.pte",
+      "role": "portable",
+      "backend": "xnnpack",
+      "status": "planned"
+    }
+  ],
+  "notes": [
+    "The XNNPACK .pte is the cross-platform target for macOS and generic Android."
+  ]
+}

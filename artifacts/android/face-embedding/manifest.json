@@ -1,0 +1,26 @@
+{
+  "modelId": "face_embedding",
+  "displayName": "Face Embedding",
+  "recommendedFormat": "pte",
+  "platform": "android",
+  "artifacts": [
+    {
+      "path": "artifacts/android/face_embedding_xnnpack.pte",
+      "role": "portable",
+      "backend": "xnnpack",
+      "status": "planned"
+    },
+    {
+      "path": "artifacts/android/face_embedding_qnn.pte",
+      "role": "optimized",
+      "backend": "qnn",
+      "status": "planned"
+    },
+    {
+      "path": "app/src/main/assets/face_embedding.pt",
+      "role": "legacy-fallback",
+      "backend": "torchscript",
+      "status": "present"
+    }
+  ]
+}
