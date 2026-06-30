@@ -1,0 +1,8 @@
+Current artifact state:
+- staged manifest only
+
+Target bundle:
+- vision_encoder.pte
+- projector.pte
+- decoder.pte
+- tokenizer assets

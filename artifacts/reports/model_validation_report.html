@@ -88,12 +88,12 @@
     <h1>SnapKnow Model Artifact Report</h1>
     <p class="lede">This off-device report tracks which model artifacts are present, which ones are still placeholders, and which formats are shared across Android and macOS.</p>
     <div class="stats">
-      <div class="stat"><strong>9</strong>Total artifacts</div>
-      <div class="stat"><strong>3</strong>Present locally</div>
+      <div class="stat"><strong>11</strong>Total artifacts</div>
+      <div class="stat"><strong>4</strong>Present locally</div>
       <div class="stat"><strong>1</strong>Missing required</div>
-      <div class="stat"><strong>5</strong>Model groups</div>
+      <div class="stat"><strong>6</strong>Model groups</div>
     </div>
-    
+
             <section class="card">
               <h2>Face Embedding</h2>
               <p><strong>Status:</strong> active<br><strong>Purpose:</strong> Face recognition embeddings</p>
@@ -112,7 +112,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
+
                 <tr>
                   <td>face_embedding_pt</td>
                   <td>torchscript</td>
@@ -124,7 +124,7 @@
                   <td>app/src/main/assets/face_embedding.pt</td>
                   <td>TorchScript fallback is large; prefer the portable .pte artifact for final deployment.</td>
                 </tr>
-                
+
                 <tr>
                   <td>face_embedding_xnnpack_pte</td>
                   <td>pte</td>
@@ -136,7 +136,7 @@
                   <td>artifacts/android/face_embedding_xnnpack.pte</td>
                   <td>ExecuTorch artifact missing; export step has not completed.<br>Required artifact missing.</td>
                 </tr>
-                
+
                 <tr>
                   <td>face_embedding_qnn_pte</td>
                   <td>pte</td>
@@ -148,11 +148,11 @@
                   <td>artifacts/android/face_embedding_qnn.pte</td>
                   <td>ExecuTorch artifact missing; export step has not completed.</td>
                 </tr>
-                
+
                 </tbody>
               </table>
             </section>
-            
+
             <section class="card">
               <h2>Object Detection</h2>
               <p><strong>Status:</strong> active<br><strong>Purpose:</strong> Detect objects in camera frames</p>
@@ -171,7 +171,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
+
                 <tr>
                   <td>fssd_25_8bit_v2</td>
                   <td>tflite</td>
@@ -183,11 +183,11 @@
                   <td>app/src/main/assets/fssd_25_8bit_v2.tflite</td>
                   <td>None</td>
                 </tr>
-                
+
                 </tbody>
               </table>
             </section>
-            
+
             <section class="card">
               <h2>Speech to Text</h2>
               <p><strong>Status:</strong> experimental<br><strong>Purpose:</strong> Offline transcription</p>
@@ -206,7 +206,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
+
                 <tr>
                   <td>whisper_encoder_pte</td>
                   <td>pte</td>
@@ -218,7 +218,7 @@
                   <td>artifacts/shared/whisper/whisper_encoder.pte</td>
                   <td>ExecuTorch artifact missing; export step has not completed.</td>
                 </tr>
-                
+
                 <tr>
                   <td>whisper_decoder_pte</td>
                   <td>pte</td>
@@ -230,11 +230,11 @@
                   <td>artifacts/shared/whisper/whisper_decoder.pte</td>
                   <td>ExecuTorch artifact missing; export step has not completed.</td>
                 </tr>
-                
+
                 </tbody>
               </table>
             </section>
-            
+
             <section class="card">
               <h2>Text to Speech</h2>
               <p><strong>Status:</strong> experimental<br><strong>Purpose:</strong> Offline speech synthesis</p>
@@ -253,7 +253,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
+
                 <tr>
                   <td>piper_onnx_model</td>
                   <td>onnx</td>
@@ -265,7 +265,7 @@
                   <td>artifacts/shared/piper/en_US-lessac-medium.onnx</td>
                   <td>Piper model missing; stage the voice asset bundle before runtime integration.</td>
                 </tr>
-                
+
                 <tr>
                   <td>piper_onnx_config</td>
                   <td>json</td>
@@ -277,11 +277,11 @@
                   <td>artifacts/shared/piper/en_US-lessac-medium.onnx.json</td>
                   <td>None</td>
                 </tr>
-                
+
                 </tbody>
               </table>
             </section>
-            
+
             <section class="card">
               <h2>Vision Language Model</h2>
               <p><strong>Status:</strong> staged<br><strong>Purpose:</strong> Scene understanding and question answering</p>
@@ -300,7 +300,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
+
                 <tr>
                   <td>smolvlm_manifest</td>
                   <td>json</td>
@@ -312,12 +312,59 @@
                   <td>app/src/main/assets/vlm/smolvlm_manifest.json</td>
                   <td>None</td>
                 </tr>
-                
+
                 </tbody>
               </table>
             </section>
-            
-    <footer>Generated at 2026-06-29T22:08:13.916622+00:00. This report is safe to host as a static page later if you want a Vercel viewer.</footer>
+
+            <section class="card">
+              <h2>LLM Chat</h2>
+              <p><strong>Status:</strong> planned<br><strong>Purpose:</strong> Small on-device conversational follow-up model</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Artifact</th>
+                    <th>Format</th>
+                    <th>Runtime</th>
+                    <th>Backend</th>
+                    <th>Platforms</th>
+                    <th>State</th>
+                    <th>Size</th>
+                    <th>Path</th>
+                    <th>Warnings</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                <tr>
+                  <td>llm_chat_manifest</td>
+                  <td>json</td>
+                  <td>ExecuTorch</td>
+                  <td>xnnpack</td>
+                  <td>android, macos</td>
+                  <td class="present">present</td>
+                  <td>0.00 MB</td>
+                  <td>artifacts/shared/llm-chat/manifest.json</td>
+                  <td>None</td>
+                </tr>
+
+                <tr>
+                  <td>llm_chat_decoder_pte</td>
+                  <td>pte</td>
+                  <td>ExecuTorch</td>
+                  <td>xnnpack</td>
+                  <td>android, macos</td>
+                  <td class="missing">missing</td>
+                  <td>n/a</td>
+                  <td>artifacts/shared/llm-chat/decoder.pte</td>
+                  <td>ExecuTorch artifact missing; export step has not completed.</td>
+                </tr>
+
+                </tbody>
+              </table>
+            </section>
+
+    <footer>Generated at 2026-06-30T18:11:50.116042+00:00. This report is safe to host as a static page later if you want a Vercel viewer.</footer>
   </main>
 </body>
 </html>

@@ -5,7 +5,7 @@
 - Present in the repo
 - Current artifact format: `pt`
 - Current runtime: PyTorch Mobile
-- Current file: `face_embedding.pt`
+- Current file: `app/src/main/assets/face_embedding.pt`
 
 ## What we still need
 
@@ -19,7 +19,9 @@ artifact we want to use as the shared Android/macOS direction.
 
 ## Current artifact view
 
-- `current/face_embedding.pt`
+- `current/artifact_status.json`
+- `artifacts/android/face-embedding/manifest.json`
+- `artifacts/macos/face-embedding/manifest.json`
 
 ## Next step
 

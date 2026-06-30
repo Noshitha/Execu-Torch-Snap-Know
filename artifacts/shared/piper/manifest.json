@@ -1,0 +1,23 @@
+{
+  "modelId": "text_to_speech",
+  "displayName": "Piper en_US-lessac-medium",
+  "recommendedFormat": "onnx",
+  "artifacts": [
+    {
+      "path": "artifacts/shared/piper/en_US-lessac-medium.onnx",
+      "role": "voice-model",
+      "backend": "onnx",
+      "status": "planned"
+    },
+    {
+      "path": "artifacts/shared/piper/en_US-lessac-medium.onnx.json",
+      "role": "voice-config",
+      "backend": "onnx",
+      "status": "planned"
+    }
+  ],
+  "notes": [
+    "Piper should stay in ONNX form for runtime integration.",
+    "Do not force this voice package into .pt or .pte."
+  ]
+}

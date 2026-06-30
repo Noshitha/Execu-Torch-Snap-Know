@@ -1,0 +1,6 @@
+Current artifact state:
+- placeholder only
+
+Target bundle:
+- decoder.pte
+- tokenizer assets

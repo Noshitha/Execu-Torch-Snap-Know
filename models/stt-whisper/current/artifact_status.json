@@ -1,0 +1,37 @@
+{
+  "modelFamily": "stt-whisper",
+  "readiness": "contract-defined",
+  "auditedFromBranch": "origin/main",
+  "sourceBranch": {
+    "name": "codex/model-stt-whisper",
+    "commit": "c19a55e"
+  },
+  "summary": "Whisper has a defined export and asset contract, but the real encoder and decoder artifacts are not bundled yet.",
+  "actualFiles": [
+    {
+      "path": "artifacts/shared/whisper/manifest.json",
+      "type": "json",
+      "exists": true,
+      "role": "artifact contract"
+    },
+    {
+      "path": "app/src/main/assets/speech/manifest.json",
+      "type": "json",
+      "exists": true,
+      "role": "runtime asset contract"
+    },
+    {
+      "path": "app/src/main/assets/speech/stt/whisper-tiny/README.txt",
+      "type": "text",
+      "exists": true,
+      "role": "staging instructions"
+    }
+  ],
+  "missingArtifacts": [
+    "artifacts/shared/whisper/whisper_encoder.pte",
+    "artifacts/shared/whisper/whisper_decoder.pte",
+    "app/src/main/assets/speech/stt/whisper-tiny/whisper_encoder.pte",
+    "app/src/main/assets/speech/stt/whisper-tiny/whisper_decoder.pte"
+  ],
+  "nextArtifactMilestone": "Export the Whisper tiny encoder and decoder pair and smoke-test them off-device."
+}

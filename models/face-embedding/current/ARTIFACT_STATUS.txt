@@ -1,0 +1,6 @@
+Current artifact:
+- face_embedding.pt
+
+Target artifacts:
+- face_embedding_xnnpack.pte
+- face_embedding_qnn.pte

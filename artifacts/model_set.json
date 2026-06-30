@@ -160,6 +160,40 @@
           "notes": "Manifest exists, but full decoder/tokenizer artifacts are not yet bundled."
         }
       ]
+    },
+    {
+      "id": "llm_chat",
+      "displayName": "LLM Chat",
+      "purpose": "Small on-device conversational follow-up model",
+      "status": "planned",
+      "artifacts": [
+        {
+          "id": "llm_chat_manifest",
+          "format": "json",
+          "path": "artifacts/shared/llm-chat/manifest.json",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "required": false,
+          "notes": "Model direction and asset contract only; no decoder weights are present yet."
+        },
+        {
+          "id": "llm_chat_decoder_pte",
+          "format": "pte",
+          "path": "artifacts/shared/llm-chat/decoder.pte",
+          "platforms": [
+            "android",
+            "macos"
+          ],
+          "runtime": "ExecuTorch",
+          "backend": "xnnpack",
+          "required": false,
+          "notes": "Future decoder export target after the rest of the model stack stabilizes."
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,6 @@
+Current artifact state:
+- placeholder only
+
+Target artifacts:
+- whisper_encoder.pte
+- whisper_decoder.pte

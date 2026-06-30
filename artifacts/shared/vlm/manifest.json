@@ -1,0 +1,35 @@
+{
+  "modelId": "vision_language_model",
+  "displayName": "SmolVLM",
+  "recommendedFormat": "pte",
+  "artifacts": [
+    {
+      "path": "artifacts/shared/vlm/vision_encoder.pte",
+      "role": "vision-encoder",
+      "backend": "xnnpack",
+      "status": "planned"
+    },
+    {
+      "path": "artifacts/shared/vlm/projector.pte",
+      "role": "multimodal-projector",
+      "backend": "xnnpack",
+      "status": "planned"
+    },
+    {
+      "path": "artifacts/shared/vlm/decoder.pte",
+      "role": "language-decoder",
+      "backend": "xnnpack",
+      "status": "planned"
+    },
+    {
+      "path": "artifacts/shared/vlm/tokenizer",
+      "role": "tokenizer-assets",
+      "backend": "host",
+      "status": "planned"
+    }
+  ],
+  "notes": [
+    "A practical mobile VLM is a bundle, not a single file.",
+    "Scene QA remains incomplete until projector, tokenizer, and decoder are wired."
+  ]
+}
