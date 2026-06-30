@@ -1,0 +1,6 @@
+Current artifact:
+- fssd_25_8bit_v2.tflite
+
+Recommended deployment direction:
+- Keep this model in TensorFlow Lite format for both Android and macOS smoke
+  testing.

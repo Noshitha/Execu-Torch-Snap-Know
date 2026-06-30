@@ -1,0 +1,23 @@
+{
+  "modelId": "object_detection",
+  "displayName": "FSSD 25",
+  "recommendedFormat": "tflite",
+  "runtimes": [
+    "tensorflow-lite"
+  ],
+  "artifacts": [
+    {
+      "path": "app/src/main/assets/fssd_25_8bit_v2.tflite",
+      "role": "detector",
+      "platforms": [
+        "android",
+        "macos"
+      ],
+      "status": "present"
+    }
+  ],
+  "notes": [
+    "This model family is already in a mobile-ready format.",
+    "Keep TensorFlow Lite as the baseline runtime until there is a clear reason to re-export to ExecuTorch."
+  ]
+}
