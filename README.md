@@ -20,9 +20,9 @@ data local on the device.
 ```text
 Camera
   ├─ ML Kit Face Detection
-  ├─ Vision Language Model (planned full path)
+  ├─ Vision Language Model
   ├─ Object Detection
-  └─ TTS / STT flows
+  └─ TTS (Whisper) / STT flows (Piper)
           │
           ▼
      ExecuTorch
@@ -31,9 +31,9 @@ Camera
 Room Database (SQLite)
           │
           ▼
-Android TTS (offline)
+Android TTS (offline fallback)
 
-Android SpeechRecognizer (offline)
+Android SpeechRecognizer (offline fallback)
           │
           ▼
 CommandParser (regex NLP)
